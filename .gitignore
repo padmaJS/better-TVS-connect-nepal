@@ -1,0 +1,10 @@
+# Never commit TVS binaries/decompiled code, build output, tools, or device logs.
+apk/
+work/
+tools/
+*.apk
+*.dex
+*.jar
+navlog*.txt
+logcat*.txt
+*.log

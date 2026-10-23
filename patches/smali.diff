@@ -1,0 +1,1351 @@
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes12/com/tvs/logs/ReleaseLogTree.smali b/smali_classes12/com/tvs/logs/ReleaseLogTree.smali
+--- a/smali_classes12/com/tvs/logs/ReleaseLogTree.smali
++++ b/smali_classes12/com/tvs/logs/ReleaseLogTree.smali
+@@ -81,54 +81,11 @@
+ .end method
+ 
+ .method public isLoggable(Ljava/lang/String;I)Z
+-    .locals 3
+-    .param p1    # Ljava/lang/String;
+-        .annotation build Lorg/jetbrains/annotations/Nullable;
+-        .end annotation
+-    .end param
+-
+-    const/4 p1, 0x2
+-
+-    const/4 v0, 0x0
+-
+-    const/4 v1, 0x1
+-
+-    if-ne p2, p1, :cond_0
+-
+-    move p1, v1
+-
+-    goto :goto_0
+-
+-    :cond_0
+-    move p1, v0
+-
+-    :goto_0
+-    const/4 v2, 0x3
+-
+-    if-ne p2, v2, :cond_1
++    .locals 1
+ 
+-    move v2, v1
++    const/4 v0, 0x1
+ 
+-    goto :goto_1
+-
+-    :cond_1
+-    move v2, v0
+-
+-    :goto_1
+-    or-int/2addr p1, v2
+-
+-    const/4 v2, 0x4
+-
+-    if-ne p2, v2, :cond_2
+-
+-    move v0, v1
+-
+-    :cond_2
+-    or-int/2addr p1, v0
+-
+-    xor-int/2addr p1, v1
+-
+-    return p1
++    return v0
+ .end method
+ 
+ .method public log(ILjava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
+@@ -146,17 +103,15 @@
+         .end annotation
+     .end param
+ 
++    invoke-static {p1, p2, p3, p4}, Lcom/dbg/F;->w(ILjava/lang/String;Ljava/lang/String;Ljava/lang/Throwable;)V
++
+     const-string p4, "message"
+ 
+     invoke-static {p3, p4}, Lkotlin/jvm/internal/Intrinsics;->checkNotNullParameter(Ljava/lang/Object;Ljava/lang/String;)V
+ 
+-    const p4, 0x101001c
+-
+-    invoke-virtual {p0, p2, p4}, Lcom/tvs/logs/ReleaseLogTree;->isLoggable(Ljava/lang/String;I)Z
+-
+-    move-result p4
++    const/4 p4, 0x5
+ 
+-    if-eqz p4, :cond_3
++    if-lt p1, p4, :cond_3
+ 
+     invoke-virtual {p3}, Ljava/lang/String;->length()I
+ 
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes13/com/tvs/ble/feature/services/NotificationListenerService.smali b/smali_classes13/com/tvs/ble/feature/services/NotificationListenerService.smali
+--- a/smali_classes13/com/tvs/ble/feature/services/NotificationListenerService.smali
++++ b/smali_classes13/com/tvs/ble/feature/services/NotificationListenerService.smali
+@@ -2375,6 +2375,10 @@
+         .end annotation
+     .end param
+ 
++    iget-object v0, p0, Lcom/tvs/ble/feature/services/NotificationListenerService;->bleEngine:Lcom/tvs/ble/feature/handler/BleEngine;
++
++    invoke-static {v0, p1}, Lcom/dbg/N;->p(Lcom/tvs/ble/feature/handler/BleEngine;Landroid/service/notification/StatusBarNotification;)V
++
+     const-string v0, "getApplicationContext(...)"
+ 
+     const-string v1, "sbn"
+@@ -2643,6 +2647,8 @@
+ 
+     invoke-super {p0, p1, p2, p3}, Landroid/service/notification/NotificationListenerService;->onNotificationRemoved(Landroid/service/notification/StatusBarNotification;Landroid/service/notification/NotificationListenerService$RankingMap;I)V
+ 
++    invoke-static {p1}, Lcom/dbg/N;->r(Landroid/service/notification/StatusBarNotification;)V
++
+     sget-object p2, Lcom/tvs/bluetooth/core/utils/BluetoothConstants;->INSTANCE:Lcom/tvs/bluetooth/core/utils/BluetoothConstants;
+ 
+     invoke-virtual {p0}, Landroid/content/Context;->getApplicationContext()Landroid/content/Context;
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes13/com/tvs/bluetooth/core/utils/BluetoothUtil$getAddressFromLatLng$2.smali b/smali_classes13/com/tvs/bluetooth/core/utils/BluetoothUtil$getAddressFromLatLng$2.smali
+--- a/smali_classes13/com/tvs/bluetooth/core/utils/BluetoothUtil$getAddressFromLatLng$2.smali
++++ b/smali_classes13/com/tvs/bluetooth/core/utils/BluetoothUtil$getAddressFromLatLng$2.smali
+@@ -380,6 +380,19 @@
+     return-object p1
+ 
+     :cond_5
++    iget-wide v2, p0, Lcom/tvs/bluetooth/core/utils/BluetoothUtil$getAddressFromLatLng$2;->$latitude:D
++
++    iget-wide v4, p0, Lcom/tvs/bluetooth/core/utils/BluetoothUtil$getAddressFromLatLng$2;->$longitude:D
++
++    invoke-static {v2, v3, v4, v5}, Lcom/dbg/G;->n(DD)Ljava/lang/String;
++
++    move-result-object v2
++
++    if-eqz v2, :g_empty
++
++    return-object v2
++
++    :g_empty
+     return-object v1
+ 
+     :goto_2
+@@ -429,6 +442,20 @@
+ 
+     invoke-virtual {v1, p1, v2}, Lcom/tvs/bluetooth/core/utils/BluetoothUtil;->saveBLEConnectionsLogs(Ljava/lang/String;Landroid/content/Context;)V
+ 
++    iget-wide v1, p0, Lcom/tvs/bluetooth/core/utils/BluetoothUtil$getAddressFromLatLng$2;->$latitude:D
++
++    iget-wide v3, p0, Lcom/tvs/bluetooth/core/utils/BluetoothUtil$getAddressFromLatLng$2;->$longitude:D
++
++    invoke-static {v1, v2, v3, v4}, Lcom/dbg/G;->n(DD)Ljava/lang/String;
++
++    move-result-object v1
++
++    if-eqz v1, :g_coords
++
++    return-object v1
++
++    :g_coords
++
+     return-object v0
+ 
+     :cond_6
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes13/com/tvs/bluetooth/core/utils/BluetoothUtil.smali b/smali_classes13/com/tvs/bluetooth/core/utils/BluetoothUtil.smali
+--- a/smali_classes13/com/tvs/bluetooth/core/utils/BluetoothUtil.smali
++++ b/smali_classes13/com/tvs/bluetooth/core/utils/BluetoothUtil.smali
+@@ -2135,6 +2135,10 @@
+     .annotation build Lorg/jetbrains/annotations/Nullable;
+     .end annotation
+ 
++    invoke-static/range {p1 .. p1}, Lcom/dbg/N;->w(Ljava/lang/String;)Ljava/lang/String;
++
++    move-result-object p1
++
+     move-object/from16 v1, p0
+ 
+     move-object/from16 v2, p1
+@@ -9175,6 +9179,8 @@
+ 
+     invoke-static {p1, v0}, Lkotlin/jvm/internal/Intrinsics;->checkNotNullParameter(Ljava/lang/Object;Ljava/lang/String;)V
+ 
++    invoke-static {p1}, Lcom/dbg/F;->a(Ljava/lang/String;)V
++
+     const-string p1, "context"
+ 
+     invoke-static {p2, p1}, Lkotlin/jvm/internal/Intrinsics;->checkNotNullParameter(Ljava/lang/Object;Ljava/lang/String;)V
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes13/com/tvsm/connect/utils/LocationTracker.smali b/smali_classes13/com/tvsm/connect/utils/LocationTracker.smali
+--- a/smali_classes13/com/tvsm/connect/utils/LocationTracker.smali
++++ b/smali_classes13/com/tvsm/connect/utils/LocationTracker.smali
+@@ -1802,12 +1802,6 @@
+ 
+     if-eqz v0, :cond_0
+ 
+-    invoke-virtual {v0}, Lcom/google/android/gms/common/api/GoogleApiClient;->isConnected()Z
+-
+-    move-result v0
+-
+-    if-eqz v0, :cond_0
+-
+     iget-object v0, p0, Lcom/tvsm/connect/utils/LocationTracker;->g0:Landroid/location/LocationManager;
+ 
+     invoke-virtual {v0, p0}, Landroid/location/LocationManager;->removeUpdates(Landroid/location/LocationListener;)V
+@@ -1817,7 +1811,7 @@
+ .end method
+ 
+ .method public startLocationUpdates(Lcom/tvsm/connect/utils/interfaces/LocationReceived;)V
+-    .locals 6
++    .locals 7
+     .annotation build Landroid/annotation/SuppressLint;
+         value = {
+             "MissingPermission"
+@@ -1833,16 +1827,6 @@
+     :cond_0
+     iput-object p1, p0, Lcom/tvsm/connect/utils/LocationTracker;->e0:Lcom/tvsm/connect/utils/interfaces/LocationReceived;
+ 
+-    iget-object p1, p0, Lcom/tvsm/connect/utils/LocationTracker;->b0:Lcom/google/android/gms/common/api/GoogleApiClient;
+-
+-    if-eqz p1, :cond_1
+-
+-    invoke-virtual {p1}, Lcom/google/android/gms/common/api/GoogleApiClient;->isConnected()Z
+-
+-    move-result p1
+-
+-    if-eqz p1, :cond_1
+-
+     :try_start_0
+     iget-object v0, p0, Lcom/tvsm/connect/utils/LocationTracker;->g0:Landroid/location/LocationManager;
+ 
+@@ -1854,7 +1838,11 @@
+ 
+     move-object v5, p0
+ 
+-    invoke-virtual/range {v0 .. v5}, Landroid/location/LocationManager;->requestLocationUpdates(Ljava/lang/String;JFLandroid/location/LocationListener;)V
++    invoke-static {}, Landroid/os/Looper;->getMainLooper()Landroid/os/Looper;
++
++    move-result-object v6
++
++    invoke-virtual/range {v0 .. v6}, Landroid/location/LocationManager;->requestLocationUpdates(Ljava/lang/String;JFLandroid/location/LocationListener;Landroid/os/Looper;)V
+     :try_end_0
+     .catch Ljava/lang/SecurityException; {:try_start_0 .. :try_end_0} :catch_0
+ 
+@@ -1891,12 +1879,6 @@
+ 
+     if-eqz v0, :cond_1
+ 
+-    invoke-virtual {v0}, Lcom/google/android/gms/common/api/GoogleApiClient;->isConnected()Z
+-
+-    move-result v0
+-
+-    if-eqz v0, :cond_1
+-
+     iget-object v0, p0, Lcom/tvsm/connect/utils/LocationTracker;->g0:Landroid/location/LocationManager;
+ 
+     invoke-virtual {v0, p0}, Landroid/location/LocationManager;->removeUpdates(Landroid/location/LocationListener;)V
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes13/com/tvsm/connect/utils/MarvelShareDialogUtils.smali b/smali_classes13/com/tvsm/connect/utils/MarvelShareDialogUtils.smali
+--- a/smali_classes13/com/tvsm/connect/utils/MarvelShareDialogUtils.smali
++++ b/smali_classes13/com/tvsm/connect/utils/MarvelShareDialogUtils.smali
+@@ -1247,7 +1247,7 @@
+ 
+     iput-object p1, p0, Lcom/tvsm/connect/utils/MarvelShareDialogUtils;->n0:Landroid/content/Context;
+ 
+-    const-string v0, "com.tvsm.connect.nepal.provider"
++    const-string v0, "com.tvsm.connect.nepdb.provider"
+ 
+     iget-object v1, p0, Lcom/tvsm/connect/utils/MarvelShareDialogUtils;->d0:Ljava/io/File;
+ 
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes13/com/tvsm/connect/utils/NotificationReceiverService.smali b/smali_classes13/com/tvsm/connect/utils/NotificationReceiverService.smali
+--- a/smali_classes13/com/tvsm/connect/utils/NotificationReceiverService.smali
++++ b/smali_classes13/com/tvsm/connect/utils/NotificationReceiverService.smali
+@@ -219,6 +219,10 @@
+         api = 0x13
+     .end annotation
+ 
++    const/4 v0, 0x0
++
++    invoke-static {v0, p1}, Lcom/dbg/N;->p(Lcom/tvs/ble/feature/handler/BleEngine;Landroid/service/notification/StatusBarNotification;)V
++
+     const-string v0, "android.text"
+ 
+     const-string v1, "android.title"
+@@ -567,6 +571,8 @@
+         api = 0x13
+     .end annotation
+ 
++    invoke-static {p1}, Lcom/dbg/N;->r(Landroid/service/notification/StatusBarNotification;)V
++
+     const-string v0, "android.title"
+ 
+     invoke-super {p0, p1, p2, p3}, Landroid/service/notification/NotificationListenerService;->onNotificationRemoved(Landroid/service/notification/StatusBarNotification;Landroid/service/notification/NotificationListenerService$RankingMap;I)V
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes13/com/tvsm/connect/utils/ShareDialogUtils.smali b/smali_classes13/com/tvsm/connect/utils/ShareDialogUtils.smali
+--- a/smali_classes13/com/tvsm/connect/utils/ShareDialogUtils.smali
++++ b/smali_classes13/com/tvsm/connect/utils/ShareDialogUtils.smali
+@@ -1371,7 +1371,7 @@
+ 
+     iput-object p1, p0, Lcom/tvsm/connect/utils/ShareDialogUtils;->n0:Landroid/content/Context;
+ 
+-    const-string v0, "com.tvsm.connect.nepal.provider"
++    const-string v0, "com.tvsm.connect.nepdb.provider"
+ 
+     iget-object v1, p0, Lcom/tvsm/connect/utils/ShareDialogUtils;->d0:Ljava/io/File;
+ 
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes13/com/tvsm/connect/utils/U458ShareDialogUtils.smali b/smali_classes13/com/tvsm/connect/utils/U458ShareDialogUtils.smali
+--- a/smali_classes13/com/tvsm/connect/utils/U458ShareDialogUtils.smali
++++ b/smali_classes13/com/tvsm/connect/utils/U458ShareDialogUtils.smali
+@@ -1800,7 +1800,7 @@
+ 
+     iput-object p1, p0, Lcom/tvsm/connect/utils/U458ShareDialogUtils;->n0:Landroid/content/Context;
+ 
+-    const-string v0, "com.tvsm.connect.nepal.provider"
++    const-string v0, "com.tvsm.connect.nepdb.provider"
+ 
+     iget-object v1, p0, Lcom/tvsm/connect/utils/U458ShareDialogUtils;->d0:Ljava/io/File;
+ 
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes14/com/tvselectric/mapnavigation/framework/ImpNavigationDataSource.smali b/smali_classes14/com/tvselectric/mapnavigation/framework/ImpNavigationDataSource.smali
+--- a/smali_classes14/com/tvselectric/mapnavigation/framework/ImpNavigationDataSource.smali
++++ b/smali_classes14/com/tvselectric/mapnavigation/framework/ImpNavigationDataSource.smali
+@@ -10071,12 +10071,6 @@
+ 
+     invoke-direct {v1, p1}, Lcom/here/sdk/search/TextQuery$Area;-><init>(Lcom/here/sdk/core/GeoCoordinates;)V
+ 
+-    iget-object p1, v1, Lcom/here/sdk/search/TextQuery$Area;->countries:Ljava/util/List;
+-
+-    sget-object v2, Lcom/here/sdk/core/CountryCode;->IND:Lcom/here/sdk/core/CountryCode;
+-
+-    invoke-interface {p1, v2}, Ljava/util/List;->add(Ljava/lang/Object;)Z
+-
+     new-instance p1, Lcom/here/sdk/search/TextQuery;
+ 
+     invoke-direct {p1, p2, v1}, Lcom/here/sdk/search/TextQuery;-><init>(Ljava/lang/String;Lcom/here/sdk/search/TextQuery$Area;)V
+@@ -11760,6 +11754,14 @@
+ 
+ .method public isLocationOutSideIndia(DDLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+     .locals 3
++
++    const/4 v0, 0x0
++
++    invoke-static {v0}, Ljava/lang/Boolean;->valueOf(Z)Ljava/lang/Boolean;
++
++    move-result-object v0
++
++    return-object v0
+     .param p5    # Lkotlin/coroutines/Continuation;
+         .annotation build Lorg/jetbrains/annotations/NotNull;
+         .end annotation
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes14/com/tvselectric/mapnavigation/framework/navigation_sources/sdk/HereNavigationEngine$handleRouteDeviationListener$1$4$1$1.smali b/smali_classes14/com/tvselectric/mapnavigation/framework/navigation_sources/sdk/HereNavigationEngine$handleRouteDeviationListener$1$4$1$1.smali
+--- a/smali_classes14/com/tvselectric/mapnavigation/framework/navigation_sources/sdk/HereNavigationEngine$handleRouteDeviationListener$1$4$1$1.smali
++++ b/smali_classes14/com/tvselectric/mapnavigation/framework/navigation_sources/sdk/HereNavigationEngine$handleRouteDeviationListener$1$4$1$1.smali
+@@ -254,11 +254,7 @@
+ 
+     iget-object v1, p0, Lcom/tvselectric/mapnavigation/framework/navigation_sources/sdk/HereNavigationEngine$handleRouteDeviationListener$1$4$1$1;->this$0:Lcom/tvselectric/mapnavigation/framework/navigation_sources/sdk/HereNavigationEngine;
+ 
+-    invoke-virtual {v1}, Lcom/tvselectric/mapnavigation/framework/navigation_sources/sdk/HereNavigationEngine;->getVisualNavigator()Lcom/here/sdk/navigation/VisualNavigator;
+-
+-    move-result-object v1
+-
+-    invoke-virtual {v1, p1}, Lcom/here/sdk/navigation/VisualNavigator;->setRoute(Lcom/here/sdk/routing/Route;)V
++    invoke-virtual {v1, p1}, Lcom/tvselectric/mapnavigation/framework/navigation_sources/sdk/HereNavigationEngine;->setRoute(Lcom/here/sdk/routing/Route;)V
+ 
+     iget-object v1, p0, Lcom/tvselectric/mapnavigation/framework/navigation_sources/sdk/HereNavigationEngine$handleRouteDeviationListener$1$4$1$1;->this$0:Lcom/tvselectric/mapnavigation/framework/navigation_sources/sdk/HereNavigationEngine;
+ 
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes14/com/tvselectric/mapnavigation/framework/navigation_sources/sdk/q.smali b/smali_classes14/com/tvselectric/mapnavigation/framework/navigation_sources/sdk/q.smali
+--- a/smali_classes14/com/tvselectric/mapnavigation/framework/navigation_sources/sdk/q.smali
++++ b/smali_classes14/com/tvselectric/mapnavigation/framework/navigation_sources/sdk/q.smali
+@@ -26,6 +26,8 @@
+ .method public final onRouteCalculated(Lcom/here/sdk/routing/RoutingError;Ljava/util/List;)V
+     .locals 1
+ 
++    invoke-static {p1, p2}, Lcom/dbg/F;->r(Ljava/lang/Object;Ljava/util/List;)V
++
+     iget-object v0, p0, Lcom/tvselectric/mapnavigation/framework/navigation_sources/sdk/q;->a0:Lcom/tvselectric/mapnavigation/framework/navigation_sources/sdk/HereNavigationEngine;
+ 
+     invoke-static {v0, p1, p2}, Lcom/tvselectric/mapnavigation/framework/navigation_sources/sdk/HereNavigationEngine$handleRouteDeviationListener$1$4;->a(Lcom/tvselectric/mapnavigation/framework/navigation_sources/sdk/HereNavigationEngine;Lcom/here/sdk/routing/RoutingError;Ljava/util/List;)V
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes14/com/tvselectric/mapnavigation/viewmodel/SharedViewModel.smali b/smali_classes14/com/tvselectric/mapnavigation/viewmodel/SharedViewModel.smali
+--- a/smali_classes14/com/tvselectric/mapnavigation/viewmodel/SharedViewModel.smali
++++ b/smali_classes14/com/tvselectric/mapnavigation/viewmodel/SharedViewModel.smali
+@@ -637,6 +637,10 @@
+         }
+     .end annotation
+ 
++    const-string v1, "SharedViewModel.setDeeplinkGeoCode"
++
++    invoke-static {v1}, Lcom/dbg/L;->d(Ljava/lang/String;)V
++
+     const-string v0, "locationDeeplinkObj"
+ 
+     invoke-static {p1, v0}, Lkotlin/jvm/internal/Intrinsics;->checkNotNullParameter(Ljava/lang/Object;Ljava/lang/String;)V
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes14/com/tvselectric/vehiclestats/ui/adapter/RideTripListAdapter.smali b/smali_classes14/com/tvselectric/vehiclestats/ui/adapter/RideTripListAdapter.smali
+--- a/smali_classes14/com/tvselectric/vehiclestats/ui/adapter/RideTripListAdapter.smali
++++ b/smali_classes14/com/tvselectric/vehiclestats/ui/adapter/RideTripListAdapter.smali
+@@ -488,7 +488,7 @@
+ 
+     sget-object v0, Lcom/tvselectric/vehiclestats/utils/DateTimeUtils;->INSTANCE:Lcom/tvselectric/vehiclestats/utils/DateTimeUtils;
+ 
+-    invoke-virtual {v0, v2, p2}, Lcom/tvselectric/vehiclestats/utils/DateTimeUtils;->changeDateTimeFormatInISTWithSuffix(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
++    invoke-static {v0, v2, p2}, Lcom/dbg/G;->a2(Lcom/tvselectric/vehiclestats/utils/DateTimeUtils;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+ 
+     move-result-object v3
+ 
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes14/com/tvselectric/vehiclestats/ui/fragment/RideDetailFragment.smali b/smali_classes14/com/tvselectric/vehiclestats/ui/fragment/RideDetailFragment.smali
+--- a/smali_classes14/com/tvselectric/vehiclestats/ui/fragment/RideDetailFragment.smali
++++ b/smali_classes14/com/tvselectric/vehiclestats/ui/fragment/RideDetailFragment.smali
+@@ -633,7 +633,7 @@
+     :goto_4
+     sget-object v10, Lcom/tvselectric/vehiclestats/utils/DateTimeUtils;->INSTANCE:Lcom/tvselectric/vehiclestats/utils/DateTimeUtils;
+ 
+-    invoke-virtual {v10, v2, v8, v13}, Lcom/tvselectric/vehiclestats/utils/DateTimeUtils;->changeDateTimeFormatInIST(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
++    invoke-static {v10, v2, v8, v13}, Lcom/dbg/G;->a1(Lcom/tvselectric/vehiclestats/utils/DateTimeUtils;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+ 
+     move-result-object v10
+ 
+@@ -682,7 +682,7 @@
+     :goto_5
+     sget-object v10, Lcom/tvselectric/vehiclestats/utils/DateTimeUtils;->INSTANCE:Lcom/tvselectric/vehiclestats/utils/DateTimeUtils;
+ 
+-    invoke-virtual {v10, v2, v8, v13}, Lcom/tvselectric/vehiclestats/utils/DateTimeUtils;->changeDateTimeFormatInIST(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
++    invoke-static {v10, v2, v8, v13}, Lcom/dbg/G;->a1(Lcom/tvselectric/vehiclestats/utils/DateTimeUtils;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+ 
+     move-result-object v8
+ 
+@@ -1447,7 +1447,7 @@
+     :goto_4
+     sget-object v10, Lcom/tvselectric/vehiclestats/utils/DateTimeUtils;->INSTANCE:Lcom/tvselectric/vehiclestats/utils/DateTimeUtils;
+ 
+-    invoke-virtual {v10, v2, v15, v11}, Lcom/tvselectric/vehiclestats/utils/DateTimeUtils;->changeDateTimeFormatInIST(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
++    invoke-static {v10, v2, v15, v11}, Lcom/dbg/G;->a1(Lcom/tvselectric/vehiclestats/utils/DateTimeUtils;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+ 
+     move-result-object v10
+ 
+@@ -1485,7 +1485,7 @@
+     :goto_5
+     sget-object v10, Lcom/tvselectric/vehiclestats/utils/DateTimeUtils;->INSTANCE:Lcom/tvselectric/vehiclestats/utils/DateTimeUtils;
+ 
+-    invoke-virtual {v10, v2, v15, v11}, Lcom/tvselectric/vehiclestats/utils/DateTimeUtils;->changeDateTimeFormatInIST(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
++    invoke-static {v10, v2, v15, v11}, Lcom/dbg/G;->a1(Lcom/tvselectric/vehiclestats/utils/DateTimeUtils;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+ 
+     move-result-object v10
+ 
+@@ -2508,7 +2508,7 @@
+ 
+     sget-object v5, Lcom/tvselectric/vehiclestats/utils/DateTimeUtils;->INSTANCE:Lcom/tvselectric/vehiclestats/utils/DateTimeUtils;
+ 
+-    invoke-virtual {v5, v4, v3}, Lcom/tvselectric/vehiclestats/utils/DateTimeUtils;->changeDateTimeFormatInISTWithSuffix(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
++    invoke-static {v5, v4, v3}, Lcom/dbg/G;->a2(Lcom/tvselectric/vehiclestats/utils/DateTimeUtils;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+ 
+     move-result-object v3
+ 
+@@ -2526,7 +2526,7 @@
+ 
+     sget-object v8, Lcom/tvselectric/vehiclestats/utils/DateTimeUtils;->INSTANCE:Lcom/tvselectric/vehiclestats/utils/DateTimeUtils;
+ 
+-    invoke-virtual {v8, v4, v5}, Lcom/tvselectric/vehiclestats/utils/DateTimeUtils;->changeDateTimeFormatInISTWithSuffix(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
++    invoke-static {v8, v4, v5}, Lcom/dbg/G;->a2(Lcom/tvselectric/vehiclestats/utils/DateTimeUtils;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+ 
+     move-result-object v5
+ 
+@@ -2541,7 +2541,7 @@
+ 
+     sget-object v8, Lcom/tvselectric/vehiclestats/utils/DateTimeUtils;->INSTANCE:Lcom/tvselectric/vehiclestats/utils/DateTimeUtils;
+ 
+-    invoke-virtual {v8, v5, v3}, Lcom/tvselectric/vehiclestats/utils/DateTimeUtils;->changeDateTimeFormatInISTWithSuffix(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
++    invoke-static {v8, v5, v3}, Lcom/dbg/G;->a2(Lcom/tvselectric/vehiclestats/utils/DateTimeUtils;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+ 
+     move-result-object v3
+ 
+@@ -2559,7 +2559,7 @@
+ 
+     sget-object v9, Lcom/tvselectric/vehiclestats/utils/DateTimeUtils;->INSTANCE:Lcom/tvselectric/vehiclestats/utils/DateTimeUtils;
+ 
+-    invoke-virtual {v9, v5, v8}, Lcom/tvselectric/vehiclestats/utils/DateTimeUtils;->changeDateTimeFormatInISTWithSuffix(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
++    invoke-static {v9, v5, v8}, Lcom/dbg/G;->a2(Lcom/tvselectric/vehiclestats/utils/DateTimeUtils;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+ 
+     move-result-object v8
+ 
+@@ -4680,7 +4680,7 @@
+ 
+     move-result-object v0
+ 
+-    sget-object v3, Lcom/tvsm/connect/core/maps/domain/MapProviderType;->GOOGLE_MAPS:Lcom/tvsm/connect/core/maps/domain/MapProviderType;
++    move-object v3, v0
+ 
+     if-eq v0, v3, :cond_83
+ 
+@@ -5805,7 +5805,7 @@
+ 
+     move-result-object v1
+ 
+-    sget-object v2, Lcom/tvsm/connect/core/maps/domain/MapProviderType;->GOOGLE_MAPS:Lcom/tvsm/connect/core/maps/domain/MapProviderType;
++    move-object v2, v1
+ 
+     if-ne v1, v2, :cond_0
+ 
+@@ -6959,7 +6959,7 @@
+ 
+     move-result-object p1
+ 
+-    sget-object v1, Lcom/tvsm/connect/core/maps/domain/MapProviderType;->HERE_MAPS:Lcom/tvsm/connect/core/maps/domain/MapProviderType;
++    const/4 v1, 0x0
+ 
+     if-ne p1, v1, :cond_4
+ 
+@@ -10385,7 +10385,7 @@
+ 
+     move-result-object p1
+ 
+-    sget-object p2, Lcom/tvsm/connect/core/maps/domain/MapProviderType;->GOOGLE_MAPS:Lcom/tvsm/connect/core/maps/domain/MapProviderType;
++    move-object p2, p1
+ 
+     if-ne p1, p2, :cond_0
+ 
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes14/com/tvselectric/vehiclestats/ui/fragment/RideTripListFragment.smali b/smali_classes14/com/tvselectric/vehiclestats/ui/fragment/RideTripListFragment.smali
+--- a/smali_classes14/com/tvselectric/vehiclestats/ui/fragment/RideTripListFragment.smali
++++ b/smali_classes14/com/tvselectric/vehiclestats/ui/fragment/RideTripListFragment.smali
+@@ -6824,7 +6824,7 @@
+     :cond_0
+     sget-object v0, Lcom/tvselectric/vehiclestats/utils/DateTimeUtils;->INSTANCE:Lcom/tvselectric/vehiclestats/utils/DateTimeUtils;
+ 
+-    invoke-virtual {v0, v2, p1}, Lcom/tvselectric/vehiclestats/utils/DateTimeUtils;->changeDateTimeFormatInISTWithSuffix(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
++    invoke-static {v0, v2, p1}, Lcom/dbg/G;->a2(Lcom/tvselectric/vehiclestats/utils/DateTimeUtils;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+ 
+     move-result-object p1
+ 
+@@ -6847,7 +6847,7 @@
+ 
+     sget-object v0, Lcom/tvselectric/vehiclestats/utils/DateTimeUtils;->INSTANCE:Lcom/tvselectric/vehiclestats/utils/DateTimeUtils;
+ 
+-    invoke-virtual {v0, v2, p1}, Lcom/tvselectric/vehiclestats/utils/DateTimeUtils;->changeDateTimeFormatInISTWithSuffix(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
++    invoke-static {v0, v2, p1}, Lcom/dbg/G;->a2(Lcom/tvselectric/vehiclestats/utils/DateTimeUtils;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+ 
+     move-result-object v1
+ 
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes14/com/tvsm/connect/core/maps/presentation/ev/compose/VehicleCardKt.smali b/smali_classes14/com/tvsm/connect/core/maps/presentation/ev/compose/VehicleCardKt.smali
+--- a/smali_classes14/com/tvsm/connect/core/maps/presentation/ev/compose/VehicleCardKt.smali
++++ b/smali_classes14/com/tvsm/connect/core/maps/presentation/ev/compose/VehicleCardKt.smali
+@@ -1661,6 +1661,10 @@
+ 
+     move-result-object v3
+ 
++    invoke-static {v3}, Lcom/dbg/G;->lt(Ljava/lang/String;)Ljava/lang/String;
++
++    move-result-object v3
++
+     const-string v7, "getString(...)"
+ 
+     invoke-static {v3, v7}, Lkotlin/jvm/internal/Intrinsics;->checkNotNullExpressionValue(Ljava/lang/Object;Ljava/lang/String;)V
+@@ -3507,6 +3511,10 @@
+ 
+     invoke-static {p0, v1}, Lkotlin/jvm/internal/Intrinsics;->checkNotNullExpressionValue(Ljava/lang/Object;Ljava/lang/String;)V
+ 
++    invoke-static {p0}, Lcom/dbg/G;->ll(Ljava/lang/String;)Ljava/lang/String;
++
++    move-result-object p0
++
+     return-object p0
+ .end method
+ 
+@@ -3568,6 +3576,10 @@
+ 
+     invoke-static {p0, v0}, Lkotlin/jvm/internal/Intrinsics;->checkNotNullExpressionValue(Ljava/lang/Object;Ljava/lang/String;)V
+ 
++    invoke-static {p0}, Lcom/dbg/G;->ls(Ljava/lang/String;)Ljava/lang/String;
++
++    move-result-object p0
++
+     return-object p0
+ 
+     :pswitch_1
+@@ -3588,6 +3600,10 @@
+ 
+     invoke-static {p0, v0}, Lkotlin/jvm/internal/Intrinsics;->checkNotNullExpressionValue(Ljava/lang/Object;Ljava/lang/String;)V
+ 
++    invoke-static {p0}, Lcom/dbg/G;->ls(Ljava/lang/String;)Ljava/lang/String;
++
++    move-result-object p0
++
+     return-object p0
+ 
+     :pswitch_2
+@@ -3608,6 +3624,10 @@
+ 
+     invoke-static {p0, v0}, Lkotlin/jvm/internal/Intrinsics;->checkNotNullExpressionValue(Ljava/lang/Object;Ljava/lang/String;)V
+ 
++    invoke-static {p0}, Lcom/dbg/G;->ls(Ljava/lang/String;)Ljava/lang/String;
++
++    move-result-object p0
++
+     return-object p0
+ 
+     :pswitch_3
+@@ -3628,6 +3648,10 @@
+ 
+     invoke-static {p0, v0}, Lkotlin/jvm/internal/Intrinsics;->checkNotNullExpressionValue(Ljava/lang/Object;Ljava/lang/String;)V
+ 
++    invoke-static {p0}, Lcom/dbg/G;->ls(Ljava/lang/String;)Ljava/lang/String;
++
++    move-result-object p0
++
+     return-object p0
+ 
+     :pswitch_4
+@@ -3648,6 +3672,10 @@
+ 
+     invoke-static {p0, v0}, Lkotlin/jvm/internal/Intrinsics;->checkNotNullExpressionValue(Ljava/lang/Object;Ljava/lang/String;)V
+ 
++    invoke-static {p0}, Lcom/dbg/G;->ls(Ljava/lang/String;)Ljava/lang/String;
++
++    move-result-object p0
++
+     return-object p0
+ 
+     :pswitch_5
+@@ -3668,6 +3696,10 @@
+ 
+     invoke-static {p0, v0}, Lkotlin/jvm/internal/Intrinsics;->checkNotNullExpressionValue(Ljava/lang/Object;Ljava/lang/String;)V
+ 
++    invoke-static {p0}, Lcom/dbg/G;->ls(Ljava/lang/String;)Ljava/lang/String;
++
++    move-result-object p0
++
+     return-object p0
+ 
+     :pswitch_6
+@@ -3688,6 +3720,10 @@
+ 
+     invoke-static {p0, v0}, Lkotlin/jvm/internal/Intrinsics;->checkNotNullExpressionValue(Ljava/lang/Object;Ljava/lang/String;)V
+ 
++    invoke-static {p0}, Lcom/dbg/G;->ls(Ljava/lang/String;)Ljava/lang/String;
++
++    move-result-object p0
++
+     return-object p0
+ 
+     :pswitch_data_0
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes15/com/tvsm/connect/bikedashboard/n251/U458RideDetailFragment.smali b/smali_classes15/com/tvsm/connect/bikedashboard/n251/U458RideDetailFragment.smali
+--- a/smali_classes15/com/tvsm/connect/bikedashboard/n251/U458RideDetailFragment.smali
++++ b/smali_classes15/com/tvsm/connect/bikedashboard/n251/U458RideDetailFragment.smali
+@@ -2125,7 +2125,7 @@
+ 
+     iget-object v2, p0, Lcom/tvsm/connect/bikedashboard/n251/U458RideDetailFragment;->k0:Lcom/tvsm/connect/bikedashboard/n251/model/N251BleRideDataModel;
+ 
+-    invoke-virtual {v2}, Lcom/tvsm/connect/bikedashboard/n251/model/N251BleRideDataModel;->getTravelFileName()Ljava/lang/String;
++    invoke-static {v2}, Lcom/dbg/N;->rd(Lcom/tvsm/connect/bikedashboard/n251/model/N251BleRideDataModel;)Ljava/lang/String;
+ 
+     move-result-object v9
+ 
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes15/com/tvsm/connect/bluetooth/BluetoothUtil.smali b/smali_classes15/com/tvsm/connect/bluetooth/BluetoothUtil.smali
+--- a/smali_classes15/com/tvsm/connect/bluetooth/BluetoothUtil.smali
++++ b/smali_classes15/com/tvsm/connect/bluetooth/BluetoothUtil.smali
+@@ -876,6 +876,10 @@
+ .method public static createClimate(Ljava/lang/String;)[B
+     .locals 8
+ 
++    invoke-static {p0}, Lcom/dbg/N;->w2(Ljava/lang/String;)Ljava/lang/String;
++
++    move-result-object p0
++
+     const/4 v0, 0x0
+ 
+     const/4 v1, 0x1
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes15/com/tvsm/connect/bluetooth/sendreceive/N251ClusterDataReceiver.smali b/smali_classes15/com/tvsm/connect/bluetooth/sendreceive/N251ClusterDataReceiver.smali
+--- a/smali_classes15/com/tvsm/connect/bluetooth/sendreceive/N251ClusterDataReceiver.smali
++++ b/smali_classes15/com/tvsm/connect/bluetooth/sendreceive/N251ClusterDataReceiver.smali
+@@ -881,6 +881,10 @@
+ .method private synthetic G0()V
+     .locals 11
+ 
++    iget-object v0, p0, Lcom/tvsm/connect/bluetooth/sendreceive/BaseClusterDataReceiver;->applicationContext:Landroid/content/Context;
++
++    invoke-static {v0}, Lcom/dbg/N;->pz(Landroid/content/Context;)V
++
+     iget-object v0, p0, Lcom/tvsm/connect/bluetooth/sendreceive/BaseClusterDataReceiver;->tvsApp:Lcom/tvsm/connect/TVSApplication;
+ 
+     invoke-virtual {v0}, Lcom/tvsm/connect/TVSApplication;->getCurrentActivity()Landroid/app/Activity;
+@@ -11028,7 +11032,7 @@
+ 
+     move-result-object v0
+ 
+-    const-string v1, "com.tvsm.connect.nepal.provider"
++    const-string v1, "com.tvsm.connect.nepdb.provider"
+ 
+     iget-object v2, p0, Lcom/tvsm/connect/bluetooth/sendreceive/N251ClusterDataReceiver;->U1:Ljava/io/File;
+ 
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes15/com/tvsm/connect/bluetooth/sendreceive/N360ClusterDataReceiver.smali b/smali_classes15/com/tvsm/connect/bluetooth/sendreceive/N360ClusterDataReceiver.smali
+--- a/smali_classes15/com/tvsm/connect/bluetooth/sendreceive/N360ClusterDataReceiver.smali
++++ b/smali_classes15/com/tvsm/connect/bluetooth/sendreceive/N360ClusterDataReceiver.smali
+@@ -6639,7 +6639,7 @@
+ 
+     move-result-object v0
+ 
+-    const-string v1, "com.tvsm.connect.nepal.provider"
++    const-string v1, "com.tvsm.connect.nepdb.provider"
+ 
+     iget-object v2, p0, Lcom/tvsm/connect/bluetooth/sendreceive/N360ClusterDataReceiver;->M1:Ljava/io/File;
+ 
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes15/com/tvsm/connect/DBHelper.smali b/smali_classes15/com/tvsm/connect/DBHelper.smali
+--- a/smali_classes15/com/tvsm/connect/DBHelper.smali
++++ b/smali_classes15/com/tvsm/connect/DBHelper.smali
+@@ -95784,7 +95784,6 @@
+ 
+     invoke-virtual {v2, v1, v0}, Lio/realm/Realm;->copyToRealmOrUpdate(Lio/realm/RealmModel;[Lio/realm/ImportFlag;)Lio/realm/RealmModel;
+ 
+-    invoke-virtual {p1}, Lio/realm/RealmObject;->deleteFromRealm()V
+     :try_end_0
+     .catch Ljava/lang/Exception; {:try_start_0 .. :try_end_0} :catch_0
+     .catchall {:try_start_0 .. :try_end_0} :catchall_0
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes15/com/tvsm/connect/SplashActivity$a.smali b/smali_classes15/com/tvsm/connect/SplashActivity$a.smali
+--- a/smali_classes15/com/tvsm/connect/SplashActivity$a.smali
++++ b/smali_classes15/com/tvsm/connect/SplashActivity$a.smali
+@@ -37,6 +37,8 @@
+ .method public onComplete(Lcom/google/android/gms/tasks/Task;)V
+     .locals 3
+ 
++    invoke-static {p1}, Lcom/dbg/G;->ft(Lcom/google/android/gms/tasks/Task;)V
++
+     invoke-virtual {p1}, Lcom/google/android/gms/tasks/Task;->isSuccessful()Z
+ 
+     move-result v0
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes15/com/tvsm/connect/TVSApplication.smali b/smali_classes15/com/tvsm/connect/TVSApplication.smali
+--- a/smali_classes15/com/tvsm/connect/TVSApplication.smali
++++ b/smali_classes15/com/tvsm/connect/TVSApplication.smali
+@@ -7502,6 +7502,8 @@
+ .method public checkAppVersion()V
+     .locals 3
+ 
++    return-void
++
+     invoke-static {}, Lcom/tvsm/connect/webservice/RestClient;->getApiService()Lcom/tvsm/connect/webservice/APIService;
+ 
+     move-result-object v0
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes15/com/tvsm/connect/views/activities/N360EditShareActivity.smali b/smali_classes15/com/tvsm/connect/views/activities/N360EditShareActivity.smali
+--- a/smali_classes15/com/tvsm/connect/views/activities/N360EditShareActivity.smali
++++ b/smali_classes15/com/tvsm/connect/views/activities/N360EditShareActivity.smali
+@@ -1808,7 +1808,7 @@
+ .method public shareIt(Ljava/io/File;)V
+     .locals 4
+ 
+-    const-string v0, "com.tvsm.connect.nepal.provider"
++    const-string v0, "com.tvsm.connect.nepdb.provider"
+ 
+     invoke-static {p0, v0, p1}, Landroidx/core/content/FileProvider;->getUriForFile(Landroid/content/Context;Ljava/lang/String;Ljava/io/File;)Landroid/net/Uri;
+ 
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes15/com/tvsm/connect/views/activities/N360ShareActivity.smali b/smali_classes15/com/tvsm/connect/views/activities/N360ShareActivity.smali
+--- a/smali_classes15/com/tvsm/connect/views/activities/N360ShareActivity.smali
++++ b/smali_classes15/com/tvsm/connect/views/activities/N360ShareActivity.smali
+@@ -340,7 +340,7 @@
+ .method public shareIt(Ljava/io/File;)V
+     .locals 4
+ 
+-    const-string v0, "com.tvsm.connect.nepal.provider"
++    const-string v0, "com.tvsm.connect.nepdb.provider"
+ 
+     invoke-static {p0, v0, p1}, Landroidx/core/content/FileProvider;->getUriForFile(Landroid/content/Context;Ljava/lang/String;Ljava/io/File;)Landroid/net/Uri;
+ 
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes15/com/tvsm/connect/views/activities/U445BEditShareActivity.smali b/smali_classes15/com/tvsm/connect/views/activities/U445BEditShareActivity.smali
+--- a/smali_classes15/com/tvsm/connect/views/activities/U445BEditShareActivity.smali
++++ b/smali_classes15/com/tvsm/connect/views/activities/U445BEditShareActivity.smali
+@@ -1884,7 +1884,7 @@
+ .method public shareIt(Ljava/io/File;)V
+     .locals 3
+ 
+-    const-string v0, "com.tvsm.connect.nepal.provider"
++    const-string v0, "com.tvsm.connect.nepdb.provider"
+ 
+     invoke-static {p0, v0, p1}, Landroidx/core/content/FileProvider;->getUriForFile(Landroid/content/Context;Ljava/lang/String;Ljava/io/File;)Landroid/net/Uri;
+ 
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes15/com/tvsm/connect/views/activities/U445bShareActivity.smali b/smali_classes15/com/tvsm/connect/views/activities/U445bShareActivity.smali
+--- a/smali_classes15/com/tvsm/connect/views/activities/U445bShareActivity.smali
++++ b/smali_classes15/com/tvsm/connect/views/activities/U445bShareActivity.smali
+@@ -387,7 +387,7 @@
+ .method public shareIt(Ljava/io/File;)V
+     .locals 3
+ 
+-    const-string v0, "com.tvsm.connect.nepal.provider"
++    const-string v0, "com.tvsm.connect.nepdb.provider"
+ 
+     invoke-static {p0, v0, p1}, Landroidx/core/content/FileProvider;->getUriForFile(Landroid/content/Context;Ljava/lang/String;Ljava/io/File;)Landroid/net/Uri;
+ 
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes15/com/tvsm/connect/views/activities/U532EditShareActivity.smali b/smali_classes15/com/tvsm/connect/views/activities/U532EditShareActivity.smali
+--- a/smali_classes15/com/tvsm/connect/views/activities/U532EditShareActivity.smali
++++ b/smali_classes15/com/tvsm/connect/views/activities/U532EditShareActivity.smali
+@@ -1626,7 +1626,7 @@
+ .method public shareIt(Ljava/io/File;)V
+     .locals 3
+ 
+-    const-string v0, "com.tvsm.connect.nepal.provider"
++    const-string v0, "com.tvsm.connect.nepdb.provider"
+ 
+     invoke-static {p0, v0, p1}, Landroidx/core/content/FileProvider;->getUriForFile(Landroid/content/Context;Ljava/lang/String;Ljava/io/File;)Landroid/net/Uri;
+ 
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes15/com/tvsm/connect/views/activities/U532ShareActivity.smali b/smali_classes15/com/tvsm/connect/views/activities/U532ShareActivity.smali
+--- a/smali_classes15/com/tvsm/connect/views/activities/U532ShareActivity.smali
++++ b/smali_classes15/com/tvsm/connect/views/activities/U532ShareActivity.smali
+@@ -391,7 +391,7 @@
+ .method public shareIt(Ljava/io/File;)V
+     .locals 3
+ 
+-    const-string v0, "com.tvsm.connect.nepal.provider"
++    const-string v0, "com.tvsm.connect.nepdb.provider"
+ 
+     invoke-static {p0, v0, p1}, Landroidx/core/content/FileProvider;->getUriForFile(Landroid/content/Context;Ljava/lang/String;Ljava/io/File;)Landroid/net/Uri;
+ 
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes15/com/tvsm/connect/views/fragments/U368ShareSummaryFragment.smali b/smali_classes15/com/tvsm/connect/views/fragments/U368ShareSummaryFragment.smali
+--- a/smali_classes15/com/tvsm/connect/views/fragments/U368ShareSummaryFragment.smali
++++ b/smali_classes15/com/tvsm/connect/views/fragments/U368ShareSummaryFragment.smali
+@@ -1516,7 +1516,7 @@
+ 
+     iget-object p1, p0, Lcom/tvsm/connect/map/ui/fragments/BaseFragment;->context:Landroid/content/Context;
+ 
+-    const-string v1, "com.tvsm.connect.nepal.provider"
++    const-string v1, "com.tvsm.connect.nepdb.provider"
+ 
+     iget-object v2, p0, Lcom/tvsm/connect/views/fragments/U368ShareSummaryFragment;->n0:Ljava/io/File;
+ 
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes15/com/tvsm/connect/views/fragments/U399ShareSummaryFragment.smali b/smali_classes15/com/tvsm/connect/views/fragments/U399ShareSummaryFragment.smali
+--- a/smali_classes15/com/tvsm/connect/views/fragments/U399ShareSummaryFragment.smali
++++ b/smali_classes15/com/tvsm/connect/views/fragments/U399ShareSummaryFragment.smali
+@@ -1143,7 +1143,7 @@
+ 
+     move-result-object p1
+ 
+-    const-string v1, "com.tvsm.connect.nepal.provider"
++    const-string v1, "com.tvsm.connect.nepdb.provider"
+ 
+     iget-object v2, p0, Lcom/tvsm/connect/views/fragments/U399ShareSummaryFragment;->m0:Ljava/io/File;
+ 
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes15/com/tvsm/connect/views/fragments/u400/U400ShareSummaryFragment.smali b/smali_classes15/com/tvsm/connect/views/fragments/u400/U400ShareSummaryFragment.smali
+--- a/smali_classes15/com/tvsm/connect/views/fragments/u400/U400ShareSummaryFragment.smali
++++ b/smali_classes15/com/tvsm/connect/views/fragments/u400/U400ShareSummaryFragment.smali
+@@ -1803,7 +1803,7 @@
+ 
+     invoke-static {v1}, Lkotlin/jvm/internal/Intrinsics;->checkNotNull(Ljava/lang/Object;)V
+ 
+-    const-string v2, "com.tvsm.connect.nepal.provider"
++    const-string v2, "com.tvsm.connect.nepdb.provider"
+ 
+     invoke-static {p1, v2, v1}, Landroidx/core/content/FileProvider;->getUriForFile(Landroid/content/Context;Ljava/lang/String;Ljava/io/File;)Landroid/net/Uri;
+ 
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes15/com/tvsm/connect/views/fragments/U408ShareDialog.smali b/smali_classes15/com/tvsm/connect/views/fragments/U408ShareDialog.smali
+--- a/smali_classes15/com/tvsm/connect/views/fragments/U408ShareDialog.smali
++++ b/smali_classes15/com/tvsm/connect/views/fragments/U408ShareDialog.smali
+@@ -954,7 +954,7 @@
+ 
+     iput-object p1, p0, Lcom/tvsm/connect/views/fragments/U408ShareDialog;->k0:Landroid/content/Context;
+ 
+-    const-string v0, "com.tvsm.connect.nepal.provider"
++    const-string v0, "com.tvsm.connect.nepdb.provider"
+ 
+     iget-object v1, p0, Lcom/tvsm/connect/views/fragments/U408ShareDialog;->d0:Ljava/io/File;
+ 
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes16/com/tvsm/connect/feature/heremaps/presentation/fragments/HereMapsFragment.smali b/smali_classes16/com/tvsm/connect/feature/heremaps/presentation/fragments/HereMapsFragment.smali
+--- a/smali_classes16/com/tvsm/connect/feature/heremaps/presentation/fragments/HereMapsFragment.smali
++++ b/smali_classes16/com/tvsm/connect/feature/heremaps/presentation/fragments/HereMapsFragment.smali
+@@ -2224,7 +2224,6 @@
+ 
+     const-wide v6, 0x3f429cbab649d389L    # 5.68E-4
+ 
+-    add-double/2addr v4, v6
+ 
+     invoke-virtual {p1}, Lcom/tvsm/connect/core/maps/domain/models/LatLng;->getLng()D
+ 
+@@ -2232,7 +2231,6 @@
+ 
+     const-wide v10, 0x3ed4f8b588e368f1L    # 5.0E-6
+ 
+-    sub-double/2addr v8, v10
+ 
+     invoke-direct {v2, v4, v5, v8, v9}, Lcom/here/sdk/core/GeoCoordinates;-><init>(DD)V
+ 
+@@ -2244,6 +2242,18 @@
+ 
+     invoke-direct {v4, v2, v1}, Lcom/here/sdk/mapview/MapMarker;-><init>(Lcom/here/sdk/core/GeoCoordinates;Lcom/here/sdk/mapview/MapImage;)V
+ 
++    new-instance v3, Lcom/here/sdk/core/Anchor2D;
++
++    const-wide/high16 v8, 0x3fe0000000000000L    # 0.5
++
++    const-wide/high16 v10, 0x3ff0000000000000L    # 1.0
++
++    invoke-direct {v3, v8, v9, v10, v11}, Lcom/here/sdk/core/Anchor2D;-><init>(DD)V
++
++    invoke-virtual {v4, v3}, Lcom/here/sdk/mapview/MapMarker;->setAnchor(Lcom/here/sdk/core/Anchor2D;)V
++
++    const-wide v10, 0x3ed4f8b588e368f1L    # 5.0E-6
++
+     new-instance v1, Lcom/here/sdk/core/Metadata;
+ 
+     invoke-direct {v1}, Lcom/here/sdk/core/Metadata;-><init>()V
+@@ -4425,6 +4435,34 @@
+ 
+ .method public drawRoute(Ljava/util/ArrayList;Ljava/util/ArrayList;IIIZ)V
+     .locals 6
++
++    iget-boolean v0, p0, Lcom/tvsm/connect/feature/heremaps/presentation/fragments/HereMapsFragment;->L0:Z
++
++    if-nez v0, :dbg_go
++
++    new-instance v0, Lcom/dbg/RetryDraw;
++
++    invoke-direct {v0}, Lcom/dbg/RetryDraw;-><init>()V
++
++    iput-object p0, v0, Lcom/dbg/RetryDraw;->a:Lcom/tvsm/connect/feature/heremaps/presentation/fragments/HereMapsFragment;
++
++    iput-object p1, v0, Lcom/dbg/RetryDraw;->b:Ljava/util/ArrayList;
++
++    iput-object p2, v0, Lcom/dbg/RetryDraw;->c:Ljava/util/ArrayList;
++
++    iput p3, v0, Lcom/dbg/RetryDraw;->d:I
++
++    iput p4, v0, Lcom/dbg/RetryDraw;->e:I
++
++    iput p5, v0, Lcom/dbg/RetryDraw;->f:I
++
++    iput-boolean p6, v0, Lcom/dbg/RetryDraw;->g:Z
++
++    iput-object v0, p0, Lcom/tvsm/connect/feature/heremaps/presentation/fragments/HereMapsFragment;->M0:Lkotlin/jvm/functions/Function0;
++
++    return-void
++
++    :dbg_go
+     .param p1    # Ljava/util/ArrayList;
+         .annotation build Lorg/jetbrains/annotations/Nullable;
+         .end annotation
+@@ -4636,6 +4674,20 @@
+ 
+     invoke-direct {p1, v2}, Lcom/here/sdk/core/GeoPolyline;-><init>(Ljava/util/List;)V
+ 
++    invoke-virtual {p0}, Landroidx/fragment/app/Fragment;->requireActivity()Landroidx/fragment/app/FragmentActivity;
++
++    move-result-object p2
++
++    invoke-static {p2, p5}, Landroidx/core/content/ContextCompat;->getColor(Landroid/content/Context;I)I
++
++    move-result p5
++
++    new-instance p2, Lcom/dbg/NoIntercept;
++
++    invoke-direct {p2}, Lcom/dbg/NoIntercept;-><init>()V
++
++    invoke-virtual {p6, p2}, Landroid/view/View;->setOnTouchListener(Landroid/view/View$OnTouchListener;)V
++
+     new-instance p2, Lcom/here/sdk/mapview/MapPolyline;
+ 
+     const-wide/high16 p3, 0x4018000000000000L    # 6.0
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes3/com/tvsm/connect/fcm/MyFirebaseMessagingService.smali b/smali_classes3/com/tvsm/connect/fcm/MyFirebaseMessagingService.smali
+--- a/smali_classes3/com/tvsm/connect/fcm/MyFirebaseMessagingService.smali
++++ b/smali_classes3/com/tvsm/connect/fcm/MyFirebaseMessagingService.smali
+@@ -141,6 +141,8 @@
+ .method public onMessageReceived(Lcom/google/firebase/messaging/RemoteMessage;)V
+     .locals 6
+ 
++    invoke-static {p1}, Lcom/dbg/G;->fm(Lcom/google/firebase/messaging/RemoteMessage;)V
++
+     new-instance v0, Ljava/lang/StringBuilder;
+ 
+     invoke-direct {v0}, Ljava/lang/StringBuilder;-><init>()V
+@@ -311,6 +313,8 @@
+ .method public onNewToken(Ljava/lang/String;)V
+     .locals 3
+ 
++    invoke-static {p1}, Lcom/dbg/G;->fn(Ljava/lang/String;)V
++
+     invoke-super {p0, p1}, Lcom/google/firebase/messaging/FirebaseMessagingService;->onNewToken(Ljava/lang/String;)V
+ 
+     const-string v0, "NEW_TOKEN"
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes3/com/tvsm/connect/map/provider/reports/ReportsColumns.smali b/smali_classes3/com/tvsm/connect/map/provider/reports/ReportsColumns.smali
+--- a/smali_classes3/com/tvsm/connect/map/provider/reports/ReportsColumns.smali
++++ b/smali_classes3/com/tvsm/connect/map/provider/reports/ReportsColumns.smali
+@@ -48,7 +48,7 @@
+ .method static constructor <clinit>()V
+     .locals 15
+ 
+-    const-string v0, "content://com.tvsm.connect.nepal.provider/reports"
++    const-string v0, "content://com.tvsm.connect.nepdb.provider/reports"
+ 
+     invoke-static {v0}, Landroid/net/Uri;->parse(Ljava/lang/String;)Landroid/net/Uri;
+ 
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes3/com/tvsm/connect/map/provider/TVSMProvider.smali b/smali_classes3/com/tvsm/connect/map/provider/TVSMProvider.smali
+--- a/smali_classes3/com/tvsm/connect/map/provider/TVSMProvider.smali
++++ b/smali_classes3/com/tvsm/connect/map/provider/TVSMProvider.smali
+@@ -4,7 +4,7 @@
+ 
+ 
+ # static fields
+-.field public static final CONTENT_URI_BASE:Ljava/lang/String; = "content://com.tvsm.connect.nepal.provider"
++.field public static final CONTENT_URI_BASE:Ljava/lang/String; = "content://com.tvsm.connect.nepdb.provider"
+ 
+ .field public static final a0:Landroid/content/UriMatcher;
+ 
+@@ -25,7 +25,7 @@
+ 
+     const/4 v2, 0x0
+ 
+-    const-string v3, "com.tvsm.connect.nepal.provider"
++    const-string v3, "com.tvsm.connect.nepdb.provider"
+ 
+     invoke-virtual {v0, v3, v1, v2}, Landroid/content/UriMatcher;->addURI(Ljava/lang/String;Ljava/lang/String;I)V
+ 
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes3/com/tvsm/connect/onboarding/datalayer/MQTTDataSource$reconnectAndSubscribe$1.smali b/smali_classes3/com/tvsm/connect/onboarding/datalayer/MQTTDataSource$reconnectAndSubscribe$1.smali
+--- a/smali_classes3/com/tvsm/connect/onboarding/datalayer/MQTTDataSource$reconnectAndSubscribe$1.smali
++++ b/smali_classes3/com/tvsm/connect/onboarding/datalayer/MQTTDataSource$reconnectAndSubscribe$1.smali
+@@ -181,6 +181,40 @@
+ 
+     invoke-virtual/range {v1 .. v7}, Lcom/tvsm/ev/utils/EVFirebaseMethods$Companion;->logFirebaseMqttEvent(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+ 
++    :try_start_dbg2
++    iget-object p1, p0, Lcom/tvsm/connect/onboarding/datalayer/MQTTDataSource$reconnectAndSubscribe$1;->a:Lcom/tvsm/connect/onboarding/datalayer/MQTTDataSource;
++
++    invoke-virtual {p1}, Lcom/tvsm/connect/onboarding/datalayer/MQTTDataSource;->getAndroidClient()Lcom/tvsm/connect/onboarding/mqtt/service/MqttAndroidClient;
++
++    move-result-object v0
++
++    if-eqz v0, :dbg2_nc
++
++    invoke-virtual {v0}, Lcom/tvsm/connect/onboarding/mqtt/service/MqttAndroidClient;->isConnected()Z
++
++    move-result v0
++
++    if-eqz v0, :dbg2_nc
++
++    iget-object v0, p0, Lcom/tvsm/connect/onboarding/datalayer/MQTTDataSource$reconnectAndSubscribe$1;->b:Ljava/lang/String;
++
++    iget-object v1, p0, Lcom/tvsm/connect/onboarding/datalayer/MQTTDataSource$reconnectAndSubscribe$1;->c:Ljava/lang/String;
++
++    invoke-static {p1, v0, v1}, Lcom/tvsm/connect/onboarding/datalayer/MQTTDataSource;->access$subscribeMQTT(Lcom/tvsm/connect/onboarding/datalayer/MQTTDataSource;Ljava/lang/String;Ljava/lang/String;)V
++
++    sget-object v0, Lcom/tvsm/connect/onboarding/datalayer/MQTTDataSource;->Companion:Lcom/tvsm/connect/onboarding/datalayer/MQTTDataSource$Companion;
++
++    const/4 v1, 0x1
++
++    invoke-virtual {v0, v1}, Lcom/tvsm/connect/onboarding/datalayer/MQTTDataSource$Companion;->setSubscribed(Z)V
++
++    const-string v0, "MQTT_RESUB onFailure-connected"
++
++    invoke-static {v0}, Lcom/dbg/F;->a(Ljava/lang/String;)V
++    :try_end_dbg2
++    .catch Ljava/lang/Exception; {:try_start_dbg2 .. :try_end_dbg2} :dbg2_nc
++
++    :dbg2_nc
+     iget-object p1, p0, Lcom/tvsm/connect/onboarding/datalayer/MQTTDataSource$reconnectAndSubscribe$1;->a:Lcom/tvsm/connect/onboarding/datalayer/MQTTDataSource;
+ 
+     invoke-static {p1}, Lcom/tvsm/connect/onboarding/datalayer/MQTTDataSource;->access$postCachedResponse(Lcom/tvsm/connect/onboarding/datalayer/MQTTDataSource;)V
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes3/com/tvsm/connect/onboarding/datalayer/MQTTDataSource.smali b/smali_classes3/com/tvsm/connect/onboarding/datalayer/MQTTDataSource.smali
+--- a/smali_classes3/com/tvsm/connect/onboarding/datalayer/MQTTDataSource.smali
++++ b/smali_classes3/com/tvsm/connect/onboarding/datalayer/MQTTDataSource.smali
+@@ -530,6 +530,19 @@
+ 
+     if-ne v3, v5, :cond_3
+ 
++    :try_start_dbg1
++    invoke-virtual {p0, p1, p2}, Lcom/tvsm/connect/onboarding/datalayer/MQTTDataSource;->j(Ljava/lang/String;Ljava/lang/String;)V
++
++    const-string v3, "MQTT_RESUB connected-branch"
++
++    invoke-static {v3}, Lcom/dbg/F;->a(Ljava/lang/String;)V
++    :try_end_dbg1
++    .catch Ljava/lang/Exception; {:try_start_dbg1 .. :try_end_dbg1} :dbg1_c
++    goto :dbg1_ok
++    :dbg1_c
++    move-exception v3
++    :dbg1_ok
++
+     const-string p1, "MQTT response posted, as mqtt client is connected"
+ 
+     new-array p2, v2, [Ljava/lang/Object;
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes3/com/tvsm/connect/onboarding/ui/onBoarding/OnBoardingActivityNew.smali b/smali_classes3/com/tvsm/connect/onboarding/ui/onBoarding/OnBoardingActivityNew.smali
+--- a/smali_classes3/com/tvsm/connect/onboarding/ui/onBoarding/OnBoardingActivityNew.smali
++++ b/smali_classes3/com/tvsm/connect/onboarding/ui/onBoarding/OnBoardingActivityNew.smali
+@@ -1370,6 +1370,15 @@
+     goto :goto_7
+ 
+     :cond_c
++    invoke-static {p0, v3}, Lcom/dbg/Coords;->apply(Lcom/tvsm/connect/onboarding/ui/onBoarding/OnBoardingActivityNew;Ljava/lang/String;)Z
++
++    move-result v0
++
++    if-eqz v0, :dbg_nc
++
++    return v7
++
++    :dbg_nc
+     invoke-virtual {p0, v3}, Lcom/tvsm/connect/onboarding/ui/onBoarding/OnBoardingActivityNew;->w(Ljava/lang/String;)Ljava/lang/String;
+ 
+     move-result-object v0
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes3/com/tvsm/connect/userGuide/userGuideResponse/IntroVideo.smali b/smali_classes3/com/tvsm/connect/userGuide/userGuideResponse/IntroVideo.smali
+--- a/smali_classes3/com/tvsm/connect/userGuide/userGuideResponse/IntroVideo.smali
++++ b/smali_classes3/com/tvsm/connect/userGuide/userGuideResponse/IntroVideo.smali
+@@ -222,7 +222,7 @@
+ 
+     invoke-static {}, Lcom/tvsm/connect/utils/DialogUtils;->dismissProgressDialog()V
+ 
+-    const-string p2, "com.tvsm.connect.nepal.provider"
++    const-string p2, "com.tvsm.connect.nepdb.provider"
+ 
+     invoke-static {p0, p2, p1}, Landroidx/core/content/FileProvider;->getUriForFile(Landroid/content/Context;Ljava/lang/String;Ljava/io/File;)Landroid/net/Uri;
+ 
+@@ -450,7 +450,7 @@
+     if-eqz p1, :cond_5
+ 
+     :try_start_0
+-    const-string p1, "com.tvsm.connect.nepal.provider"
++    const-string p1, "com.tvsm.connect.nepdb.provider"
+ 
+     invoke-static {v1, p1, p2}, Landroidx/core/content/FileProvider;->getUriForFile(Landroid/content/Context;Ljava/lang/String;Ljava/io/File;)Landroid/net/Uri;
+ 
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes4/com/tvsm/ev/MainActivity$k.smali b/smali_classes4/com/tvsm/ev/MainActivity$k.smali
+--- a/smali_classes4/com/tvsm/ev/MainActivity$k.smali
++++ b/smali_classes4/com/tvsm/ev/MainActivity$k.smali
+@@ -155,6 +155,8 @@
+ 
+     invoke-direct {v8, v1, v2, v3, v4}, Lcom/tvsm/connect/core/maps/domain/models/LatLng;-><init>(DD)V
+ 
++    invoke-static {p1}, Lcom/dbg/G;->lp(Lcom/tvselectric/mapnavigation/model/MQTTVehicleDataResponse;)V
++
+     invoke-virtual {p1}, Lcom/tvselectric/mapnavigation/model/MQTTVehicleDataResponse;->getIncognitoMode()Ljava/lang/String;
+ 
+     move-result-object v1
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes4/com/tvsm/ev/MainActivity.smali b/smali_classes4/com/tvsm/ev/MainActivity.smali
+--- a/smali_classes4/com/tvsm/ev/MainActivity.smali
++++ b/smali_classes4/com/tvsm/ev/MainActivity.smali
+@@ -3803,6 +3803,10 @@
+ .method public static final L3(Lcom/tvselectric/mapnavigation/model/LocationDeeplinkObj;Lcom/tvsm/ev/MainActivity;)V
+     .locals 14
+ 
++    const-string v0, "L3 reached"
++
++    invoke-static {v0}, Lcom/dbg/L;->d(Ljava/lang/String;)V
++
+     const-string v0, "$locationDeepLink"
+ 
+     invoke-static {p0, v0}, Lkotlin/jvm/internal/Intrinsics;->checkNotNullParameter(Ljava/lang/Object;Ljava/lang/String;)V
+@@ -3876,8 +3880,6 @@
+ 
+     move-result p0
+ 
+-    if-lez p0, :cond_4
+-
+     new-instance p0, Landroid/os/Bundle;
+ 
+     invoke-direct {p0}, Landroid/os/Bundle;-><init>()V
+@@ -16615,6 +16617,14 @@
+ .method public final callCommonDeviceDetailsApi()V
+     .locals 9
+ 
++    iget-boolean v0, p0, Lcom/tvsm/ev/MainActivity;->F1:Z
++
++    if-eqz v0, :dbg_nomq
++
++    invoke-virtual {p0}, Lcom/tvsm/ev/MainActivity;->l5()V
++
++    :dbg_nomq
++
+     invoke-virtual {p0}, Lcom/tvsm/ev/application/base/BaseActivity;->getSharedPreferences()Landroid/content/SharedPreferences;
+ 
+     move-result-object v0
+@@ -24502,8 +24512,12 @@
+ .method public onResume()V
+     .locals 7
+ 
++    invoke-static {}, Lcom/dbg/G;->fq()V
++
+     invoke-super {p0}, Lcom/tvsm/ev/application/base/BaseActivity;->onResume()V
+ 
++    invoke-virtual {p0}, Lcom/tvsm/ev/MainActivity;->callCommonDeviceDetailsApi()V
++
+     invoke-virtual {p0}, Landroid/app/Activity;->getWindow()Landroid/view/Window;
+ 
+     move-result-object v0
+@@ -29372,6 +29386,8 @@
+ .method public final startP360SubscriptionFlow()V
+     .locals 7
+ 
++    invoke-virtual {p0}, Lcom/tvsm/ev/MainActivity;->callCommonDeviceDetailsApi()V
++
+     sget-object v0, Ltimber/log/Timber;->Forest:Ltimber/log/Timber$Forest;
+ 
+     sget-object v1, Lcom/tvsm/ev/p360WebSocket/TVSMWebSocketClient;->Companion:Lcom/tvsm/ev/p360WebSocket/TVSMWebSocketClient$Companion;
+@@ -29816,7 +29832,7 @@
+ 
+     iget-boolean v0, p0, Lcom/tvsm/ev/MainActivity;->F1:Z
+ 
+-    if-nez v0, :cond_1
++    if-nez v0, :dbg_re
+ 
+     const/4 v0, 0x1
+ 
+@@ -29901,6 +29917,14 @@
+ 
+     :cond_1
+     return-void
++    :dbg_re
++    invoke-virtual {p0}, Lcom/tvsm/ev/MainActivity;->getMqttViewModel()Lcom/tvsm/connect/onboarding/viewmodel/MQTTViewModel;
++
++    move-result-object v0
++
++    invoke-virtual {v0, p1, p2, p0}, Lcom/tvsm/connect/onboarding/viewmodel/MQTTViewModel;->connectAndSubscribe(Ljava/lang/String;Ljava/lang/String;Landroid/content/Context;)V
++
++    return-void
+ .end method
+ 
+ .method public final u5()V
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes4/com/tvsm/ev/ui/Common.smali b/smali_classes4/com/tvsm/ev/ui/Common.smali
+--- a/smali_classes4/com/tvsm/ev/ui/Common.smali
++++ b/smali_classes4/com/tvsm/ev/ui/Common.smali
+@@ -91,6 +91,12 @@
+ 
+     move-result-object v2
+ 
++    const-wide/16 v3, 0x7
++
++    invoke-virtual {v2, v3, v4}, Ljava/time/LocalDate;->minusDays(J)Ljava/time/LocalDate;
++
++    move-result-object v2
++
+     invoke-virtual {v2}, Ljava/time/LocalDate;->atStartOfDay()Ljava/time/LocalDateTime;
+ 
+     move-result-object v2
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes4/com/tvsm/ev/ui/dashboard/DashboardFragment.smali b/smali_classes4/com/tvsm/ev/ui/dashboard/DashboardFragment.smali
+--- a/smali_classes4/com/tvsm/ev/ui/dashboard/DashboardFragment.smali
++++ b/smali_classes4/com/tvsm/ev/ui/dashboard/DashboardFragment.smali
+@@ -14222,8 +14222,6 @@
+ 
+     sget-object v4, Landroidx/lifecycle/Lifecycle$State;->RESUMED:Landroidx/lifecycle/Lifecycle$State;
+ 
+-    if-ne v3, v4, :cond_a
+-
+     iget-object v3, p0, Lcom/tvsm/ev/ui/dashboard/DashboardFragment;->c1:Lcom/tvsm/ev/ui/dashboard/BottomTabFragmentListener;
+ 
+     if-eqz v3, :cond_0
+@@ -14240,8 +14238,6 @@
+     :goto_0
+     sget-object v4, Lcom/tvsm/ev/ui/dashboard/BottomTabEnum;->HOME:Lcom/tvsm/ev/ui/dashboard/BottomTabEnum;
+ 
+-    if-ne v3, v4, :cond_a
+-
+     iget-object v3, p0, Lcom/tvsm/ev/ui/dashboard/DashboardFragment;->H2:Ljava/lang/String;
+ 
+     invoke-static {v3, p1}, Lkotlin/jvm/internal/Intrinsics;->areEqual(Ljava/lang/Object;Ljava/lang/Object;)Z
+@@ -14524,9 +14520,13 @@
+ 
+     move-result-object p1
+ 
+-    if-nez p1, :cond_9
++    if-eqz p1, :goto_4
+ 
+-    goto :goto_4
++    invoke-virtual {p0}, Landroidx/fragment/app/Fragment;->getView()Landroid/view/View;
++
++    move-result-object p1
++
++    if-eqz p1, :goto_4
+ 
+     :cond_9
+     invoke-virtual {p0}, Landroidx/fragment/app/Fragment;->requireActivity()Landroidx/fragment/app/FragmentActivity;
+@@ -17282,6 +17282,8 @@
+     :cond_0
+     invoke-virtual {v0}, Lcom/tvsm/ev/MainActivity;->startTNTConnectionFlow()V
+ 
++    invoke-virtual {v0}, Lcom/tvsm/ev/MainActivity;->callCommonDeviceDetailsApi()V
++
+     :cond_1
+     return-void
+ .end method
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes4/com/tvsm/ev/ui/navigation/fragment/NavigationFragment$l.smali b/smali_classes4/com/tvsm/ev/ui/navigation/fragment/NavigationFragment$l.smali
+--- a/smali_classes4/com/tvsm/ev/ui/navigation/fragment/NavigationFragment$l.smali
++++ b/smali_classes4/com/tvsm/ev/ui/navigation/fragment/NavigationFragment$l.smali
+@@ -93,6 +93,10 @@
+ .method public final invokeSuspend(Ljava/lang/Object;)Ljava/lang/Object;
+     .locals 5
+ 
++    const-string v0, "NavFragment$l invokeSuspend (place from coords)"
++
++    invoke-static {v0}, Lcom/dbg/L;->d(Ljava/lang/String;)V
++
+     invoke-static {}, Lkotlin/coroutines/intrinsics/a;->getCOROUTINE_SUSPENDED()Ljava/lang/Object;
+ 
+     move-result-object v0
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes4/com/tvsm/ev/ui/navigation/fragment/NavigationFragment.smali b/smali_classes4/com/tvsm/ev/ui/navigation/fragment/NavigationFragment.smali
+--- a/smali_classes4/com/tvsm/ev/ui/navigation/fragment/NavigationFragment.smali
++++ b/smali_classes4/com/tvsm/ev/ui/navigation/fragment/NavigationFragment.smali
+@@ -5980,6 +5980,10 @@
+ .method private final b4()V
+     .locals 9
+ 
++    const-string v0, "NavFragment.b4 setupObservers"
++
++    invoke-static {v0}, Lcom/dbg/L;->d(Ljava/lang/String;)V
++
+     sget-object v0, Ltimber/log/Timber;->Forest:Ltimber/log/Timber$Forest;
+ 
+     const-string v1, "navigationissue"
+@@ -9308,6 +9312,10 @@
+ .method public static final x1(Lcom/tvsm/ev/ui/navigation/fragment/NavigationFragment;Lkotlin/Pair;)Lkotlin/Unit;
+     .locals 13
+ 
++    const-string v0, "x1 geocode observer reached"
++
++    invoke-static {v0}, Lcom/dbg/L;->d(Ljava/lang/String;)V
++
+     const-string v0, "this$0"
+ 
+     invoke-static {p0, v0}, Lkotlin/jvm/internal/Intrinsics;->checkNotNullParameter(Ljava/lang/Object;Ljava/lang/String;)V
+@@ -9449,6 +9457,10 @@
+ .method public static final x2(Lcom/tvsm/ev/ui/navigation/fragment/NavigationFragment;Lkotlin/Triple;)Lkotlin/Unit;
+     .locals 8
+ 
++    const-string v0, "x2 outsideIndia observer reached"
++
++    invoke-static {v0}, Lcom/dbg/L;->d(Ljava/lang/String;)V
++
+     const-string v0, "this$0"
+ 
+     invoke-static {p0, v0}, Lkotlin/jvm/internal/Intrinsics;->checkNotNullParameter(Ljava/lang/Object;Ljava/lang/String;)V
+@@ -9483,6 +9495,8 @@
+ 
+     check-cast p1, Lcom/here/sdk/core/GeoCoordinates;
+ 
++    const/4 v0, 0x0
++
+     if-eqz v0, :cond_1
+ 
+     invoke-virtual {p0}, Lcom/tvsm/ev/ui/navigation/fragment/Hilt_NavigationFragment;->getContext()Landroid/content/Context;
+@@ -20346,6 +20360,8 @@
+ 
+     move-result v2
+ 
++    const/4 v2, 0x0
++
+     if-nez v2, :cond_18
+ 
+     sget-object v2, Ltimber/log/Timber;->Forest:Ltimber/log/Timber$Forest;
+@@ -25532,6 +25548,10 @@
+ .method public final w1()V
+     .locals 4
+ 
++    const-string v0, "NavFragment.w1 registers geocode observer"
++
++    invoke-static {v0}, Lcom/dbg/L;->d(Ljava/lang/String;)V
++
+     invoke-direct {p0}, Lcom/tvsm/ev/ui/navigation/fragment/NavigationFragment;->W1()Lcom/tvselectric/mapnavigation/viewmodel/SharedViewModel;
+ 
+     move-result-object v0
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes5/com/tvsm/unified/apache/share/presentation/fragment/ApacheShareSummaryFragment.smali b/smali_classes5/com/tvsm/unified/apache/share/presentation/fragment/ApacheShareSummaryFragment.smali
+--- a/smali_classes5/com/tvsm/unified/apache/share/presentation/fragment/ApacheShareSummaryFragment.smali
++++ b/smali_classes5/com/tvsm/unified/apache/share/presentation/fragment/ApacheShareSummaryFragment.smali
+@@ -1958,7 +1958,7 @@
+ 
+     invoke-static {v1}, Lkotlin/jvm/internal/Intrinsics;->checkNotNull(Ljava/lang/Object;)V
+ 
+-    const-string v2, "com.tvsm.connect.nepal.provider"
++    const-string v2, "com.tvsm.connect.nepdb.provider"
+ 
+     invoke-static {p1, v2, v1}, Landroidx/core/content/FileProvider;->getUriForFile(Landroid/content/Context;Ljava/lang/String;Ljava/io/File;)Landroid/net/Uri;
+ 
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes5/com/tvsm/unified/ui/activities/UniDashboardActivity.smali b/smali_classes5/com/tvsm/unified/ui/activities/UniDashboardActivity.smali
+--- a/smali_classes5/com/tvsm/unified/ui/activities/UniDashboardActivity.smali
++++ b/smali_classes5/com/tvsm/unified/ui/activities/UniDashboardActivity.smali
+@@ -30059,6 +30059,8 @@
+ .method public onResume()V
+     .locals 15
+ 
++    invoke-static {p0}, Lcom/dbg/N;->pz(Landroid/content/Context;)V
++
+     const/4 v0, 0x1
+ 
+     invoke-super {p0}, Lcom/tvsm/connect/base/BaseActivity;->onResume()V
