@@ -35,13 +35,24 @@ Requirements: Linux/macOS, Java 21 (`javac` too), Python 3, `curl`, `zip`, `patc
    adb shell pm path com.tvsm.connect.nepal          # lists base.apk + split_config.*.apk
    mkdir -p apk && adb pull <each path> apk/
    ```
-   Expected files and hashes: `scripts/apk.sha256` (`base.apk`, `split_config.arm64_v8a.apk`, `split_config.xxhdpi.apk`). Other versions/ABIs won't patch.
+   `base.apk` must match the hash in `scripts/apk.sha256` (other versions won't patch). Pull every `split_config.*.apk` your phone lists; they vary by screen density/ABI and are only renamed, not patched.
 2. `scripts/fetch-tools.sh` — downloads apktool 2.11.1, uber-apk-signer 1.3.0, R8/D8 8.5.35 (hash-checked).
 3. `scripts/setup.sh` — decodes and applies patches into `work/base`.
 4. `scripts/build.sh` — builds signed APKs into `work/signed/`.
 5. `scripts/install.sh` — installs next to the Play app and pushes `places.txt`.
 
 Then log in with OTP in the clone and pair the scooter.
+
+## Quick start with an AI coding agent
+
+Prereqs: TVS Connect Nepal 4.5.0 installed from Play on your phone, USB debugging on, phone plugged in (`adb devices` lists it).
+Clone this repo, open Claude Code / Codex / Cursor in it, and paste:
+
+> Read AGENTS.md and README.md. Then build and install the patched TVS Connect clone on my connected phone: check prerequisites (java 21 + javac, python3, curl, zip, patch, adb) and tell me what's missing; pull the three 4.5.0 APKs from the phone into apk/ with adb; run scripts/fetch-tools.sh, scripts/setup.sh, scripts/build.sh, scripts/install.sh, stopping at the first error. Don't uninstall or modify the Play Store app. When done, tell me what to do on the phone.
+
+To change something afterwards:
+
+> Read AGENTS.md and docs/patches.md. I want <describe the problem/feature>. Find the relevant code (decompile apk/base.apk with jadx if needed), make the smallest patch in work/base (logic in src/java helpers), rebuild, install, and tell me how to test it. Then run scripts/mkpatch.sh and update docs/patches.md with status "untested".
 
 ## Caveats
 

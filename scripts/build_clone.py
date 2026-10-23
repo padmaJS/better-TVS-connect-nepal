@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Assemble side-by-side clone: original APKs + patched dex + same-length byte-patched package name.
 Usage: build_clone.py  (run from repo root via scripts/build.sh; needs apk/*.apk, work/apks/dex-only.apk)"""
-import zipfile, os
+import zipfile, os, glob
 OLD, NEW = b"com.tvsm.connect.nepal", b"com.tvsm.connect.nepdb"
 PERM_OLD, PERM_NEW = b"com.tvsm.EXPORTED_PERMISSION", b"com.tvsm.EXPORTED_PERMISSIOM"
 LBL_OLD, LBL_NEW = b"TVS Connect - Nepal", b"TVS Connect - Debug"
@@ -46,6 +46,6 @@ def split_patch(name, data):
 
 os.makedirs("work/apks2", exist_ok=True)
 build("apk/base.apk", "work/apks2/base.apk", base_patch)
-build("apk/split_config.arm64_v8a.apk", "work/apks2/split_arm64_v8a.apk", split_patch)
-build("apk/split_config.xxhdpi.apk", "work/apks2/split_xxhdpi.apk", split_patch)
+for f in sorted(glob.glob("apk/split_config.*.apk")):  # ABI/density/language splits differ per phone
+    build(f, "work/apks2/" + os.path.basename(f), split_patch)
 print("ok")
