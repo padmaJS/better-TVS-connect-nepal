@@ -27,7 +27,7 @@ Status: **verified** = tried on device with a scooter; **untested** = builds and
 |---|---|---|
 | Track time lat/lng last changed (`G.lp`, state in `files/lastpos.txt`, logs `LOC_ASOF`) | smali_classes4 `ev/MainActivity$k` → helper `G.lp` | verified |
 | "Live Location" → "Location as of h:mm a" (`G.ll`); title "NAME · as of X" (`G.lt`) | smali_classes14 `core/maps/presentation/ev/compose/VehicleCardKt` | verified |
-| "On Ride · 25 km/h · Eco" from GPS `speed` + `driving_mode` (`G.ls`; mode "1" = Eco, others shown as "Mode n") | same | verified |
+| "On Ride · 25 km/h · Eco" from GPS `speed` + `driving_mode` (`G.ls`; mode 1 = Eco, 2 = Power, 0 hidden) | same | verified |
 | Card marker at exact position, bottom-centre anchor (was ~63 m north offset) | smali_classes16 `feature/heremaps/presentation/fragments/HereMapsFragment.f0` | verified |
 
 ## Search / navigation (#3/#4)
@@ -53,10 +53,11 @@ Status: **verified** = tried on device with a scooter; **untested** = builds and
 
 | Change | Where | Status |
 |---|---|---|
-| Offline place name: on Geocoder IOException/empty → `G.n` nearest GeoNames place ≤15 km. Logs `OFFLINE_GEO` | smali_classes13 `tvs/bluetooth/core/utils/BluetoothUtil$getAddressFromLatLng$2` | verified online; offline ride pending |
+| Place name: `G.c` first (last name if within 200 m; offline lookup if Geocoder failed in last 10 min), then Geocoder; on IOException (`G.e`, starts 10 min skip) / empty → `G.n` nearest OSM place ≤15 km. Logs `OFFLINE_GEO` | smali_classes13 `tvs/bluetooth/core/utils/BluetoothUtil$getAddressFromLatLng$2` | verified online; offline ride pending |
 | Google Maps nav notification → cluster arrows/distance/road name (`N.p`/`N.r`, U546 icon ids, resend 1 s). Logs `GMAPS_NAV` | smali_classes13 `tvs/ble/feature/services/NotificationListenerService` (iQube), `tvsm/connect/utils/NotificationReceiverService` (XP) | **experimental**: frames sent, arrow mapping being verified |
+| Arrow learning: Maps arrow icon saved as `files/icons/<crc>.png`; `files/icons/labels.txt` lines `<crc> <ACTION>` (or a turn word in the text) map icon → arrow; read once per app start | helper `N` | **untested** |
 | Icon/text survey: `touch files/picto_test`, start a Maps nav → cluster cycles icons 0–63 then text frames | helper `N` | survey tool |
-| Weather from Open-Meteo (`N.w` iQube, `N.w2` XP; position rounded to 2 dp, cached 15 min / 3 h) | smali_classes13 `tvs/bluetooth/core/utils/BluetoothUtil.createClimate`; smali_classes15 `tvsm/connect/bluetooth/BluetoothUtil.createClimate` | **experimental**: frames reach cluster, nothing displayed yet |
+| Weather from Open-Meteo, XP only (`N.w2`; iQube `N.w` hook removed: cluster never showed it; position rounded to 2 dp, cached 15 min / 3 h) | smali_classes13 `tvs/bluetooth/core/utils/BluetoothUtil.createClimate`; smali_classes15 `tvsm/connect/bluetooth/BluetoothUtil.createClimate` | **experimental**: frames reach cluster, nothing displayed yet |
 
 ## NTorq XP (vehicleTypeId 9, old N251 stack)
 
@@ -67,10 +68,20 @@ Status: **verified** = tried on device with a scooter; **untested** = builds and
 | Paused ride >1 h old → closed + synced instead of merged into next ride (`N.pz`) | smali_classes15 `N251ClusterDataReceiver.G0`; smali_classes5 `unified/ui/activities/UniDashboardActivity.onResume` | **untested** |
 | Ride detail: if server omits `travelFileName`, derive it from the download link so the route CSV loads (`N.rd`, logs `RIDE detail`) | smali_classes15 `bikedashboard/n251/U458RideDetailFragment` | **untested** |
 
+## Vehicle Stats / rides
+
+| Change | Where | Status |
+|---|---|---|
+| Charging history + SOC Analysis cards shown (`CommonUtils.isIBApp` forced false at 2 sites) | smali_classes14 `vehiclestats/ui/fragment/VehicleStatsLandingFragment` (`onViewCreated`, `N`) | verified |
+| Charging record detail: `getChargingPoints` 404 → empty points, detail opens with list data | smali_classes14 `vehiclestats/viewmodel/VehicleStatsViewModel$b` | verified |
+| New ride after 5 min parked (was 15) | smali_classes13 `tvs/ble/feature/datareceiver/IQubeClusterDataReceiver` | **untested** |
+| Ride list month query count 100 (server returns RecordNotFound for any date range anyway) | smali_classes14 `vehiclestats/ui/fragment/RideTripListFragment` | server-side broken |
+
 ## App-wide
 
 | Change | Where | Status |
 |---|---|---|
+| No app-rating sheet / nudge counter (`MainActivity.t2`, `checkAppHomeCounter` return at once) | smali_classes4 `tvsm/ev/MainActivity` | verified |
 | No update / force-update dialog (`checkAppVersion` returns immediately) | smali_classes15 `tvsm/connect/TVSApplication` | verified |
 | All Timber lines (+ redaction of JWT/bearer/email) appended to `files/navlog.txt` (helper `F`, rotates at 50 MB) | smali_classes12 `tvs/logs/ReleaseLogTree` | verified |
 | FCM logging: `FCM_MSG`, `FCM_NEW_TOKEN`, `FCM_TOKEN ok/len` (never the token) | smali_classes3 `fcm/MyFirebaseMessagingService`; smali_classes15 `SplashActivity$a`; `MainActivity.onResume` | verified |

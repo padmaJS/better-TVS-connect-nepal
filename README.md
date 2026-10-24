@@ -14,12 +14,15 @@ This repo contains **no TVS code**. It holds our patches, our own helper code an
 | Ride detail map | live, zoomable HERE map with route instead of static image | verified |
 | Ride times 15 min off | server sends IST; converted to phone time zone (list + detail) | verified |
 | Location card | "Location as of h:mm" (TCU repeats last fix until GPS locks), "On Ride · 25 km/h · Eco", marker pinned to exact position | verified |
-| Cluster location name offline | nearest GeoNames place when Android Geocoder has no internet | verified (offline ride pending) |
+| Cluster location name | nearest OpenStreetMap place (Android Geocoder returns nothing in Nepal); cached within 200 m, Geocoder skipped 10 min after it fails (was ~700 lookups/min riding) | verified (cache ride pending) |
 | Update popup | disabled in the clone (it can't be updated from Play anyway) | verified |
 | Nav reroute after missed turn | engine route kept in sync after `returnToRoute` | **untested** |
 | Google Maps navigation → scooter cluster | turn arrows/distance from Google Maps' notification sent over BLE | **experimental** |
-| Cluster weather | Open-Meteo instead of TVS weather API (returns nothing for Nepal) | **experimental** |
+| Cluster weather | iQube: removed (cluster never showed it). NTorq XP: Open-Meteo | XP **experimental** |
 | NTorq XP ride recording | GPS updates actually start; paused rides not deleted / merged | **untested** |
+| Vehicle Stats | Charging history + SOC Analysis cards shown (hidden for international builds); charging record opens without SOC graph (endpoint 404 in Nepal) | verified |
+| Ride pause | new ride after 5 min parked instead of 15 | **untested** |
+| App-rating sheet | never shown | verified |
 | Diagnostics | app log (JWT/email redacted) to `files/navlog.txt`, FCM/geofence logging | verified |
 
 Not app-fixable (see `docs/findings.md`): geofence alerts (server never generates them), anti-theft (TCU/server), HERE POI and one-way data in Nepal.

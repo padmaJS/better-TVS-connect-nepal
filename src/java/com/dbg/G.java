@@ -43,7 +43,26 @@ public final class G {
         }
         String res = (bi >= 0 && Math.sqrt(best) * 111.2 <= MAX_KM) ? nm[bi] : null;
         F.a("OFFLINE_GEO " + lat + "," + lng + " -> " + res);
+        if (res != null) { cLa = lat; cLo = lng; cNm = res; }
         return res;
+    }
+
+    // Riding triggers ~700 lookups/min. Reuse last name within 200 m; skip the (always failing) Geocoder
+    // for 10 min after it throws. null -> caller runs Geocoder as before.
+    static double cLa = 999, cLo;
+    static String cNm;
+    static long geoOff;
+
+    public static synchronized String c(double lat, double lng) {
+        double dy = cLa - lat, dx = (cLo - lng) * Math.cos(Math.toRadians(lat));
+        if (cNm != null && Math.sqrt(dx * dx + dy * dy) * 111.2 < 0.2) return cNm;
+        return System.currentTimeMillis() < geoOff ? n(lat, lng) : null;
+    }
+
+    // Geocoder threw: offline name, Geocoder off for 10 min.
+    public static synchronized String e(double lat, double lng) {
+        geoOff = System.currentTimeMillis() + 600_000;
+        return n(lat, lng);
     }
 
     // Server ride times are IST (UTC+5:30); re-express in phone tz (Nepal +5:45), same format. Unparseable -> unchanged.
@@ -145,8 +164,8 @@ public final class G {
             java.text.SimpleDateFormat in = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss", java.util.Locale.ENGLISH);
             in.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
             if (System.currentTimeMillis() - in.parse(ride[0]).getTime() > 120000) return label;
-            String m = "1".equals(ride[3]) ? "Eco" : "Mode " + ride[3]; // only code 1 confirmed (user rode in Eco)
-            return label + " · " + Math.round(Double.parseDouble(ride[2])) + " km/h · " + m;
+            String m = "1".equals(ride[3]) ? " · Eco" : "2".equals(ride[3]) ? " · Power" : "0".equals(ride[3]) ? "" : " · Mode " + ride[3]; // codes from app's DrivingMode (1 eco, 2 pwr); 0 = none/standstill
+            return label + " · " + Math.round(Double.parseDouble(ride[2])) + " km/h" + m;
         } catch (Exception e) { return label; }
     }
 
@@ -186,12 +205,20 @@ public final class G {
                 f.setTimeZone(java.util.TimeZone.getTimeZone("UTC"));
                 ride = new String[]{f.format(new java.util.Date()), "1", "24.7109375", "1"};
                 if (!ls("On Ride").equals("On Ride · 25 km/h · Eco")) throw new AssertionError(ls("On Ride"));
+                ride[3] = "2"; if (!ls("On Ride").equals("On Ride · 25 km/h · Power")) throw new AssertionError(ls("On Ride"));
+                ride[3] = "0"; if (!ls("On Ride").equals("On Ride · 25 km/h")) throw new AssertionError(ls("On Ride"));
                 ride[0] = "2026-10-21 02:00:00";
                 if (!ls("Locked").equals("Locked")) throw new AssertionError(ls("Locked"));
                 System.out.println(ls("On Ride") + " OK");
                 if (!lt("Location as of Oct 20, 8:11 PM of MY SCOOTER").equals("MY SCOOTER · as of Oct 20, 8:11 PM")) throw new AssertionError();
                 if (!lt("Live Location of X").equals("Live Location of X")) throw new AssertionError();
                 System.out.println(lt("Location as of 2:13 PM of MY SCOOTER") + " OK");
+                if (c(27.7172, 85.3240) != null) throw new AssertionError("geocoder should run first");
+                String b = e(27.7172, 85.3240);
+                if (b == null || !b.equals(c(27.7180, 85.3245))) throw new AssertionError("cache within 200 m");
+                cNm = null; if (c(27.70, 85.32) == null) throw new AssertionError("offline while geocoder off");
+                geoOff = 0; cLa = 999; cNm = null; if (c(27.70, 85.32) != null) throw new AssertionError();
+                System.out.println("geo cache " + b + " OK");
             } catch (Exception e) { throw new RuntimeException(e); }
             return;
         }

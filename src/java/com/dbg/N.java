@@ -28,10 +28,16 @@ public final class N {
             Bundle x = n.extras;
             String title = s(x.getCharSequence("android.title")), text = s(x.getCharSequence("android.text"));
             String sub = s(x.getCharSequence("android.subText"));
-            String act = action(text);
+            int d = meters(title), left = meters(sub);
+            // Maps alternates "140 m | Turn right" with " | Head south" (no distance) -> keep last frame instead of flashing straight/0 m
+            synchronized (N.class) {
+                if (d < 0 && !text.toLowerCase().contains("rerout") && (frame != null || xpf != null)) return;
+            }
+            // Text often carries no direction ("toward X Road"); the arrow is only in largeIcon -> learn/lookup by bitmap
+            String ik = iconKey(x.get("android.largeIcon"));
+            String act = iconAct(ik, action(text));
             // iQube cluster uses the U546 0-63 icon set; NavInstructions ids (44=right) showed wrong icons on ride 2026-10-22
             int picto = NavInstructionsU546.valueOf(act).getPictogramId();
-            int d = meters(title), left = meters(sub);
             // cluster time field = time to next turn: route avg speed (left/sec) applied to distance d
             long sec = left > 0 ? 60L * (long) Math.ceil(minutes(sub) * (double) Math.max(d, 0) / left) : 0; // whole min, rounded up (cluster shows sec/60)
             String lbl = label(text);
@@ -41,7 +47,7 @@ public final class N {
                 synchronized (N.class) { xps = h; xpf = xf; frame = null; send(); timer(); }
                 return;
             }
-            F.a("GMAPS_NAV " + title + " | " + text + " | " + sub + " -> " + act + " picto=" + picto + " d=" + d + " left=" + left + " sec=" + sec + " lbl=" + lbl);
+            F.a("GMAPS_NAV " + title + " | " + text + " | " + sub + " -> " + act + " picto=" + picto + " d=" + d + " left=" + left + " sec=" + sec + " lbl=" + lbl + " icon=" + ik);
             Object f = BleNavigationSendData.Companion.byteArrayForNavigation(Math.max(d, 0), 0L, Math.max(left, 0), sec, 0, lbl, picto, null);
             synchronized (N.class) {
                 eng = e;
@@ -280,6 +286,63 @@ public final class N {
 
     static String s(CharSequence c) { return c == null ? "" : c.toString(); }
 
+    // Maps arrow bitmaps: each new one saved as icons/<crc>.png; icons/labels.txt = "<crc> <ACTION>" lines,
+    // learned when the text names the turn, or added by hand after looking at the PNGs.
+    static final java.io.File ICONS = new java.io.File("/sdcard/Android/data/com.tvsm.connect.nepdb/files/icons");
+    static java.util.Map<String, String> labels;
+
+    static String iconKey(Object o) {
+        try {
+            android.graphics.Bitmap b = o instanceof android.graphics.Bitmap ? (android.graphics.Bitmap) o : null;
+            if (o instanceof android.graphics.drawable.Icon) {
+                android.graphics.drawable.Drawable dr = ((android.graphics.drawable.Icon) o).loadDrawable((android.content.Context) (Object) com.tvsm.connect.TVSApplication.getInstance());
+                if (dr instanceof android.graphics.drawable.BitmapDrawable) b = ((android.graphics.drawable.BitmapDrawable) dr).getBitmap();
+            }
+            if (b == null) return null;
+            int w = b.getWidth(), h = b.getHeight();
+            int[] p = new int[w * h];
+            b.getPixels(p, 0, w, 0, 0, w, h);
+            java.nio.ByteBuffer bb = java.nio.ByteBuffer.allocate(p.length * 4);
+            bb.asIntBuffer().put(p);
+            java.util.zip.CRC32 c = new java.util.zip.CRC32();
+            c.update(bb.array());
+            String k = Long.toHexString(c.getValue());
+            java.io.File f = new java.io.File(ICONS, k + ".png");
+            if (!f.exists()) {
+                ICONS.mkdirs();
+                try (java.io.FileOutputStream out = new java.io.FileOutputStream(f)) { b.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, out); }
+                F.a("GMAPS_NAV new icon " + k);
+            }
+            return k;
+        } catch (Throwable t) {
+            F.a("GMAPS_NAV icon err " + t);
+            return null;
+        }
+    }
+
+    // Text naming a turn wins (and teaches the icon); otherwise use what the icon was labelled.
+    static synchronized String iconAct(String k, String textAct) {
+        if (labels == null) {
+            labels = new java.util.HashMap<>();
+            try {
+                for (String l : java.nio.file.Files.readAllLines(new java.io.File(ICONS, "labels.txt").toPath())) {
+                    String[] a = l.trim().split("\\s+");
+                    if (a.length == 2) labels.put(a[0], a[1]);
+                }
+            } catch (Throwable ignored) {}
+        }
+        if (k == null) return textAct;
+        if (!"CONTINUE_ON".equals(textAct)) {
+            if (!labels.containsKey(k)) {
+                labels.put(k, textAct);
+                try (java.io.FileWriter w = new java.io.FileWriter(new java.io.File(ICONS, "labels.txt"), true)) { w.write(k + " " + textAct + "\n"); } catch (Throwable ignored) {}
+                F.a("GMAPS_NAV learned " + k + " " + textAct);
+            }
+            return textAct;
+        }
+        return labels.getOrDefault(k, textAct);
+    }
+
     // "250 m", "1.2 km", "8 min · 1.7 km · 10:24 AM ETA" -> first distance in meters, else -1
     static int meters(String s) {
         Matcher m = Pattern.compile("([\\d.,]+)\\s*(km|m)\\b").matcher(s);
@@ -355,6 +418,10 @@ public final class N {
         if (xp("LEFT_TURN", 40, 0, 0, "x")[0][14] != 3 || xp("CONTINUE_ON", 2000, 0, 0, "x")[0][14] != 5 || xp("ARRIVE", 10, 0, 0, "x")[0][14] != 8
             || xpPicto("LEFT_ROUNDABOUT_EXIT2") != 66 || xpPicto("LEFT_ROUNDABOUT_EXIT7") != 67) throw new AssertionError("xp2");
         if (!"R_1_2_3.csv".equals(csvName("https://x.y/a/b/R_1_2_3.csv?sig=1")) || csvName(null) != null) throw new AssertionError("csv");
+        labels = new java.util.HashMap<>();
+        if (!"RIGHT_TURN".equals(iconAct("a1", "RIGHT_TURN")) || !"RIGHT_TURN".equals(iconAct("a1", "CONTINUE_ON"))
+            || !"CONTINUE_ON".equals(iconAct("b2", "CONTINUE_ON")) || !"LEFT_TURN".equals(iconAct("a1", "LEFT_TURN"))
+            || !"CONTINUE_ON".equals(iconAct(null, "CONTINUE_ON"))) throw new AssertionError("icon " + labels);
         System.out.println("N OK");
     }
 }

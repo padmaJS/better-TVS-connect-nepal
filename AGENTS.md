@@ -10,7 +10,7 @@ Read this, then `docs/patches.md` (what is patched where) and `docs/findings.md`
 | `src/smali/` | hand-written helper classes `com/dbg/{Coords,F,L,NoIntercept,RetryDraw}` | yes (or edit in `work/base` + mkpatch) |
 | `src/java/com/dbg/{G,N}.java` | helper logic in Java, compiled to smali by `scripts/helpers.sh` | yes — edit Java, not the generated smali |
 | `src/java/stub/` | compile-only stubs of app/Android classes G/N call | add a stub when you call a new app method |
-| `assets/` | `places.txt` (GeoNames), `nsc.bin` (network security config) | rarely |
+| `assets/` | `places.txt` (OpenStreetMap, ODbL), `nsc.bin` (network security config) | rarely |
 | `scripts/` | fetch-tools, setup, helpers, build, install, mkpatch, `build_clone.py` | |
 | `apk/`, `work/`, `tools/` | user's APKs, decoded trees, jars — **gitignored** | never commit |
 

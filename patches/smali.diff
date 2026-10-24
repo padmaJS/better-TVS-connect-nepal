@@ -81,6 +81,18 @@ diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x r
  
      invoke-virtual {p3}, Ljava/lang/String;->length()I
  
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes13/com/tvs/ble/feature/datareceiver/IQubeClusterDataReceiver.smali b/smali_classes13/com/tvs/ble/feature/datareceiver/IQubeClusterDataReceiver.smali
+--- a/smali_classes13/com/tvs/ble/feature/datareceiver/IQubeClusterDataReceiver.smali
++++ b/smali_classes13/com/tvs/ble/feature/datareceiver/IQubeClusterDataReceiver.smali
+@@ -2909,7 +2909,7 @@
+ 
+     new-instance v1, Lcom/tvs/ble/feature/datareceiver/c;
+ 
+-    const v2, 0xdbba0
++    const v2, 0x493e0
+ 
+     invoke-direct {v1, p0, v2}, Lcom/tvs/ble/feature/datareceiver/c;-><init>(Lcom/tvs/ble/feature/datareceiver/IQubeClusterDataReceiver;I)V
+ 
 diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes13/com/tvs/ble/feature/services/NotificationListenerService.smali b/smali_classes13/com/tvs/ble/feature/services/NotificationListenerService.smali
 --- a/smali_classes13/com/tvs/ble/feature/services/NotificationListenerService.smali
 +++ b/smali_classes13/com/tvs/ble/feature/services/NotificationListenerService.smali
@@ -107,7 +119,27 @@ diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x r
 diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes13/com/tvs/bluetooth/core/utils/BluetoothUtil$getAddressFromLatLng$2.smali b/smali_classes13/com/tvs/bluetooth/core/utils/BluetoothUtil$getAddressFromLatLng$2.smali
 --- a/smali_classes13/com/tvs/bluetooth/core/utils/BluetoothUtil$getAddressFromLatLng$2.smali
 +++ b/smali_classes13/com/tvs/bluetooth/core/utils/BluetoothUtil$getAddressFromLatLng$2.smali
-@@ -380,6 +380,19 @@
+@@ -193,6 +193,19 @@
+ 
+     invoke-static {p1}, Lkotlin/ResultKt;->throwOnFailure(Ljava/lang/Object;)V
+ 
++    iget-wide v2, p0, Lcom/tvs/bluetooth/core/utils/BluetoothUtil$getAddressFromLatLng$2;->$latitude:D
++
++    iget-wide v4, p0, Lcom/tvs/bluetooth/core/utils/BluetoothUtil$getAddressFromLatLng$2;->$longitude:D
++
++    invoke-static {v2, v3, v4, v5}, Lcom/dbg/G;->c(DD)Ljava/lang/String;
++
++    move-result-object v1
++
++    if-eqz v1, :g_run
++
++    return-object v1
++
++    :g_run
+     new-instance v2, Landroid/location/Geocoder;
+ 
+     iget-object p1, p0, Lcom/tvs/bluetooth/core/utils/BluetoothUtil$getAddressFromLatLng$2;->$context:Landroid/content/Context;
+@@ -380,6 +393,19 @@
      return-object p1
  
      :cond_5
@@ -127,7 +159,7 @@ diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x r
      return-object v1
  
      :goto_2
-@@ -429,6 +442,20 @@
+@@ -429,6 +455,20 @@
  
      invoke-virtual {v1, p1, v2}, Lcom/tvs/bluetooth/core/utils/BluetoothUtil;->saveBLEConnectionsLogs(Ljava/lang/String;Landroid/content/Context;)V
  
@@ -135,7 +167,7 @@ diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x r
 +
 +    iget-wide v3, p0, Lcom/tvs/bluetooth/core/utils/BluetoothUtil$getAddressFromLatLng$2;->$longitude:D
 +
-+    invoke-static {v1, v2, v3, v4}, Lcom/dbg/G;->n(DD)Ljava/lang/String;
++    invoke-static {v1, v2, v3, v4}, Lcom/dbg/G;->e(DD)Ljava/lang/String;
 +
 +    move-result-object v1
 +
@@ -151,18 +183,7 @@ diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x r
 diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes13/com/tvs/bluetooth/core/utils/BluetoothUtil.smali b/smali_classes13/com/tvs/bluetooth/core/utils/BluetoothUtil.smali
 --- a/smali_classes13/com/tvs/bluetooth/core/utils/BluetoothUtil.smali
 +++ b/smali_classes13/com/tvs/bluetooth/core/utils/BluetoothUtil.smali
-@@ -2135,6 +2135,10 @@
-     .annotation build Lorg/jetbrains/annotations/Nullable;
-     .end annotation
- 
-+    invoke-static/range {p1 .. p1}, Lcom/dbg/N;->w(Ljava/lang/String;)Ljava/lang/String;
-+
-+    move-result-object p1
-+
-     move-object/from16 v1, p0
- 
-     move-object/from16 v2, p1
-@@ -9175,6 +9179,8 @@
+@@ -9175,6 +9175,8 @@
  
      invoke-static {p1, v0}, Lkotlin/jvm/internal/Intrinsics;->checkNotNullParameter(Ljava/lang/Object;Ljava/lang/String;)V
  
@@ -497,6 +518,24 @@ diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x r
 diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes14/com/tvselectric/vehiclestats/ui/fragment/RideTripListFragment.smali b/smali_classes14/com/tvselectric/vehiclestats/ui/fragment/RideTripListFragment.smali
 --- a/smali_classes14/com/tvselectric/vehiclestats/ui/fragment/RideTripListFragment.smali
 +++ b/smali_classes14/com/tvselectric/vehiclestats/ui/fragment/RideTripListFragment.smali
+@@ -1655,7 +1655,7 @@
+ 
+     iput-boolean p0, v1, Lcom/tvselectric/vehiclestats/ui/fragment/RideTripListFragment;->g0:Z
+ 
+-    const/16 p0, 0x2710
++    const/16 p0, 0x64
+ 
+     iput p0, v1, Lcom/tvselectric/vehiclestats/ui/fragment/RideTripListFragment;->u0:I
+ 
+@@ -5610,7 +5610,7 @@
+ 
+     const-string v1, "historical"
+ 
+-    const/16 v2, 0x2710
++    const/16 v2, 0x64
+ 
+     const-string v3, "historical_n_trip"
+ 
 @@ -6824,7 +6824,7 @@
      :cond_0
      sget-object v0, Lcom/tvselectric/vehiclestats/utils/DateTimeUtils;->INSTANCE:Lcom/tvselectric/vehiclestats/utils/DateTimeUtils;
@@ -515,6 +554,84 @@ diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x r
  
      move-result-object v1
  
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes14/com/tvselectric/vehiclestats/ui/fragment/VehicleStatsLandingFragment.smali b/smali_classes14/com/tvselectric/vehiclestats/ui/fragment/VehicleStatsLandingFragment.smali
+--- a/smali_classes14/com/tvselectric/vehiclestats/ui/fragment/VehicleStatsLandingFragment.smali
++++ b/smali_classes14/com/tvselectric/vehiclestats/ui/fragment/VehicleStatsLandingFragment.smali
+@@ -5063,9 +5063,9 @@
+ 
+     invoke-virtual {p0, v0}, Lcom/tvselectric/vehiclestats/ui/fragment/VehicleStatsLandingFragment;->L(Ljava/util/List;)V
+ 
+-    invoke-static {}, Lcom/tvselectric/vehiclestats/utils/CommonUtils;->isIBApp()Z
++    const/4 v0, 0x0  # dbg: show charging/battery cards (was CommonUtils.isIBApp)
++
+ 
+-    move-result v0
+ 
+     if-nez v0, :cond_0
+ 
+@@ -7819,9 +7819,9 @@
+ 
+     invoke-direct {p0}, Lcom/tvselectric/vehiclestats/ui/fragment/VehicleStatsLandingFragment;->q()V
+ 
+-    invoke-static {}, Lcom/tvselectric/vehiclestats/utils/CommonUtils;->isIBApp()Z
++    const/4 p1, 0x0  # dbg: show charging/battery cards (was CommonUtils.isIBApp)
++
+ 
+-    move-result p1
+ 
+     if-nez p1, :cond_2
+ 
+diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes14/com/tvselectric/vehiclestats/viewmodel/VehicleStatsViewModel$b.smali b/smali_classes14/com/tvselectric/vehiclestats/viewmodel/VehicleStatsViewModel$b.smali
+--- a/smali_classes14/com/tvselectric/vehiclestats/viewmodel/VehicleStatsViewModel$b.smali
++++ b/smali_classes14/com/tvselectric/vehiclestats/viewmodel/VehicleStatsViewModel$b.smali
+@@ -177,7 +177,7 @@
+ 
+     instance-of v0, p1, Lcom/tvsm/network_core/NetworkResult$Success;
+ 
+-    if-eqz v0, :cond_4
++    if-eqz v0, :g_empty
+ 
+     iget-object v0, v8, Lcom/tvselectric/vehiclestats/viewmodel/VehicleStatsViewModel$b;->b0:Lcom/tvselectric/vehiclestats/viewmodel/VehicleStatsViewModel;
+ 
+@@ -195,6 +195,7 @@
+ 
+     if-eqz p1, :cond_3
+ 
++    :g_pts
+     new-instance v1, Lcom/tvselectric/vehiclestats/model/VehicleStatsUiState$ChargingPoints;
+ 
+     invoke-direct {v1, p1}, Lcom/tvselectric/vehiclestats/model/VehicleStatsUiState$ChargingPoints;-><init>(Lcom/tvselectric/vehiclestats/model/ChargingPointsResponse;)V
+@@ -211,4 +212,30 @@
+     sget-object p1, Lkotlin/Unit;->INSTANCE:Lkotlin/Unit;
+ 
+     return-object p1
++
++    # dbg: Nepal backend 404s getChargingPoints -> empty points so detail screen opens with list data
++    :g_empty
++    iget-object v0, v8, Lcom/tvselectric/vehiclestats/viewmodel/VehicleStatsViewModel$b;->b0:Lcom/tvselectric/vehiclestats/viewmodel/VehicleStatsViewModel;
++
++    invoke-static {v0}, Lcom/tvselectric/vehiclestats/viewmodel/VehicleStatsViewModel;->access$get_uiState$p(Lcom/tvselectric/vehiclestats/viewmodel/VehicleStatsViewModel;)Landroidx/lifecycle/MutableLiveData;
++
++    move-result-object v0
++
++    new-instance v1, Lcom/tvselectric/vehiclestats/model/ChargingPointsResponse;
++
++    const/4 v2, 0x0
++
++    const/4 v3, 0x0
++
++    const/4 v4, 0x0
++
++    const/4 v5, 0x0
++
++    const/4 v6, 0x0
++
++    invoke-direct/range {v1 .. v6}, Lcom/tvselectric/vehiclestats/model/ChargingPointsResponse;-><init>(Ljava/lang/Integer;Ljava/lang/String;Ljava/lang/String;Lcom/tvselectric/vehiclestats/model/ChargingTripData;Ljava/lang/String;)V
++
++    move-object p1, v1
++
++    goto :g_pts
+ .end method
 diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x res -x unknown -x assets -x kotlin -x META-INF a/smali_classes14/com/tvsm/connect/core/maps/presentation/ev/compose/VehicleCardKt.smali b/smali_classes14/com/tvsm/connect/core/maps/presentation/ev/compose/VehicleCardKt.smali
 --- a/smali_classes14/com/tvsm/connect/core/maps/presentation/ev/compose/VehicleCardKt.smali
 +++ b/smali_classes14/com/tvsm/connect/core/maps/presentation/ev/compose/VehicleCardKt.smali
@@ -1123,7 +1240,19 @@ diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x r
      new-instance p0, Landroid/os/Bundle;
  
      invoke-direct {p0}, Landroid/os/Bundle;-><init>()V
-@@ -16615,6 +16617,14 @@
+@@ -10240,6 +10242,11 @@
+ .method public static final t2(Lcom/tvsm/ev/MainActivity;Lcom/tvsm/network_core/NetworkResult;)Lkotlin/Unit;
+     .locals 5
+ 
++    # dbg: never show app-rating sheet
++    sget-object v0, Lkotlin/Unit;->INSTANCE:Lkotlin/Unit;
++
++    return-object v0
++
+     const-string v0, "this$0"
+ 
+     invoke-static {p0, v0}, Lkotlin/jvm/internal/Intrinsics;->checkNotNullParameter(Ljava/lang/Object;Ljava/lang/String;)V
+@@ -16615,6 +16622,14 @@
  .method public final callCommonDeviceDetailsApi()V
      .locals 9
  
@@ -1138,7 +1267,17 @@ diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x r
      invoke-virtual {p0}, Lcom/tvsm/ev/application/base/BaseActivity;->getSharedPreferences()Landroid/content/SharedPreferences;
  
      move-result-object v0
-@@ -24502,8 +24512,12 @@
+@@ -16723,6 +16738,9 @@
+ .method public final checkAppHomeCounter()V
+     .locals 1
+ 
++    # dbg: no rating-nudge counter
++    return-void
++
+     new-instance v0, Lcom/tvsm/ev/MainActivity$checkAppHomeCounter$1;
+ 
+     invoke-direct {v0, p0}, Lcom/tvsm/ev/MainActivity$checkAppHomeCounter$1;-><init>(Lcom/tvsm/ev/MainActivity;)V
+@@ -24502,8 +24520,12 @@
  .method public onResume()V
      .locals 7
  
@@ -1151,7 +1290,7 @@ diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x r
      invoke-virtual {p0}, Landroid/app/Activity;->getWindow()Landroid/view/Window;
  
      move-result-object v0
-@@ -29372,6 +29386,8 @@
+@@ -29372,6 +29394,8 @@
  .method public final startP360SubscriptionFlow()V
      .locals 7
  
@@ -1160,7 +1299,7 @@ diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x r
      sget-object v0, Ltimber/log/Timber;->Forest:Ltimber/log/Timber$Forest;
  
      sget-object v1, Lcom/tvsm/ev/p360WebSocket/TVSMWebSocketClient;->Companion:Lcom/tvsm/ev/p360WebSocket/TVSMWebSocketClient$Companion;
-@@ -29816,7 +29832,7 @@
+@@ -29816,7 +29840,7 @@
  
      iget-boolean v0, p0, Lcom/tvsm/ev/MainActivity;->F1:Z
  
@@ -1169,7 +1308,7 @@ diff -ruN -x dbg -x build -x apktool.yml -x original -x AndroidManifest.xml -x r
  
      const/4 v0, 0x1
  
-@@ -29901,6 +29917,14 @@
+@@ -29901,6 +29925,14 @@
  
      :cond_1
      return-void
