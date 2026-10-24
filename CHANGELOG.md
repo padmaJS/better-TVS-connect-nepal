@@ -1,5 +1,27 @@
 # Changelog
 
+## [1.1.0-2026.10.24] - 2026-10-24
+
+### Scooter Cluster
+- Place names from OpenStreetMap (denser than GeoNames; fixes one name over long distances)
+- Place-name lookups cached within 200 m; failing Android Geocoder skipped for 10 min (was ~700 lookups/min while riding)
+- Turn-arrow learning from Google Maps icons via files/icons/labels.txt (experimental)
+- iQube weather hook removed (cluster never displayed it); NTorq XP keeps Open-Meteo
+
+### Vehicle Card
+- Driving mode shows Eco / Power; mode 0 hidden
+
+### Vehicle Stats & Rides
+- Charging history and SOC Analysis cards shown
+- Charging record detail opens even though the charging-points API 404s in Nepal
+- New ride starts after 5 min parked instead of 15 (untested)
+
+### App-wide
+- App-rating sheet and nudge counter disabled
+
+### Commits
+- 85de675 - Place-name cache, OSM places, stats cards, rating off, 5-min pause, arrow learning
+
 ## [1.0.0-2026.10.23] - 2026-10-23
 
 First public release. Patches TVS Connect Nepal 4.5.0 (vc 42) into a side-by-side clone (com.tvsm.connect.nepdb); bring your own APK.
